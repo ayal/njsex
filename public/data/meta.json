@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-09-21T20:05:31+03:00",
+ "products": 3586,
+ "live": 3586,
+ "in_stock": 3155,
+ "frames_with_specs": 952,
+ "parts_with_specs": 2633,
+ "last_refresh": {
+  "note": "initial full pull 2026-09-21"
+ }
+}

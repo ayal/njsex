@@ -1,0 +1,86 @@
+{
+ "chainrings": {
+  "file": "specs/chainrings.jsonl",
+  "count": 342
+ },
+ "hubs": {
+  "file": "specs/hubs.jsonl",
+  "count": 325
+ },
+ "stems": {
+  "file": "specs/stems.jsonl",
+  "count": 212
+ },
+ "cogs": {
+  "file": "specs/cogs.jsonl",
+  "count": 140
+ },
+ "handlebars": {
+  "file": "specs/handlebars.jsonl",
+  "count": 140
+ },
+ "handlebar-stem-grip-sets": {
+  "file": "specs/handlebar-stem-grip-sets.jsonl",
+  "count": 134
+ },
+ "pedals": {
+  "file": "specs/pedals.jsonl",
+  "count": 132
+ },
+ "saddles": {
+  "file": "specs/saddles.jsonl",
+  "count": 118
+ },
+ "wheelsets": {
+  "file": "specs/wheelsets.jsonl",
+  "count": 99
+ },
+ "forks": {
+  "file": "specs/forks.jsonl",
+  "count": 77
+ },
+ "seatposts": {
+  "file": "specs/seatposts.jsonl",
+  "count": 77
+ },
+ "cranks": {
+  "file": "specs/cranks.jsonl",
+  "count": 76
+ },
+ "clips-and-straps": {
+  "file": "specs/clips-and-straps.jsonl",
+  "count": 44
+ },
+ "bottom-brackets": {
+  "file": "specs/bottom-brackets.jsonl",
+  "count": 41
+ },
+ "chains": {
+  "file": "specs/chains.jsonl",
+  "count": 37
+ },
+ "tools": {
+  "file": "specs/tools.jsonl",
+  "count": 28
+ },
+ "tools-gear": {
+  "file": "specs/tools-gear.jsonl",
+  "count": 32
+ },
+ "headsets": {
+  "file": "specs/headsets.jsonl",
+  "count": 8
+ },
+ "grips": {
+  "file": "specs/grips.jsonl",
+  "count": 2
+ },
+ "t-shirts": {
+  "file": "specs/t-shirts.jsonl",
+  "count": 3
+ },
+ "bric-a-brac": {
+  "file": "specs/bric-a-brac.jsonl",
+  "count": 566
+ }
+}
