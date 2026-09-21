@@ -29,9 +29,11 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
     sync(); const ro = new ResizeObserver(sync); ro.observe(el); return () => ro.disconnect();
   }, []);
   const theme = useTheme();
+  // bike parts first by size; apparel, gear, tools and shop merch trail behind
+  const TRAILING = ['bric-a-brac', 'tools-gear', 'tools', 't-shirts'];
   const cats = catalog.collections.filter(c => !FRAME_DUPES.has(c.handle) && catalog.membership[c.handle]?.length)
     .map(c => ({ handle: c.handle, title: c.title, n: catalog.membership[c.handle].length }))
-    .sort((a, b) => b.n - a.n);
+    .sort((a, b) => (TRAILING.indexOf(a.handle) + 1 || 0) - (TRAILING.indexOf(b.handle) + 1 || 0) || b.n - a.n);
   const specSorts = (config?.sorts ?? []).flatMap(s => [[`${s.key}_asc`, `${s.label} ↑`], [`${s.key}_desc`, `${s.label} ↓`]]);
   const nFacets = Object.keys(state.facets).length;
   return (
