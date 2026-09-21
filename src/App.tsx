@@ -18,9 +18,6 @@ export default function App() {
   const [state, update] = useHashState();
   const favs = useFavs();
   const [drawer, setDrawer] = useState(false);   // mobile filter drawer
-  // read in the initializer, clear in an effect: StrictMode runs initializers twice, so clearing there loses the value
-  const [imported] = useState<{ views?: number; favs?: number; error?: string } | null>(() => { try { const v = sessionStorage.getItem('njsex.imported'); return v ? JSON.parse(v) : null; } catch { return null; } });
-  useEffect(() => { try { sessionStorage.removeItem('njsex.imported'); } catch { /* ignore */ } }, []);
 
   useEffect(() => { loadCatalog().then(setCatalog, e => setError(String(e))); }, []);
 
@@ -51,7 +48,6 @@ export default function App() {
   return (
     <TooltipProvider>
       <TopBar catalog={catalog} config={config} defs={defs} state={state} resultCount={result.length} catCount={catItems.length} favCount={favs.size} update={update} onFilters={() => setDrawer(true)} />
-      {imported && <div className="mx-4 mt-3 rounded-md border border-emerald-300 bg-emerald-50 text-emerald-900 px-3 py-2 text-xs dark:bg-emerald-950 dark:text-emerald-100 dark:border-emerald-800" data-testid="imported-note">{imported.error ? `import failed: ${imported.error}` : `Imported ${imported.views ?? 0} saved views and ${imported.favs ?? 0} favourites from your other browser.`}</div>}
       {state.favs && result.length === 0 && <div className="p-10 text-center text-muted-foreground">no favourites yet — click ☆ on any card to save it</div>}
       <div className="flex items-start">
         {/* `contents` so the aside is the flex item itself: a wrapper box would be its sticky containing block */}

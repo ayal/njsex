@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Bookmark, Check, Copy, Download, Pencil, RotateCcw, Save, Trash2, Upload, X } from 'lucide-react';
-import { LIVE, exportJson, exportUrl, importJson, onLiveSite } from '../transfer';
+import { Bookmark, Check, Pencil, RotateCcw, Save, Trash2, X } from 'lucide-react';
 import type { UIState } from '../useHashState';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,10 +32,6 @@ export function SavedViews({ state, apply }: { state: UIState; apply: (s: UIStat
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [renaming, setRenaming] = useState<{ from: string; to: string } | null>(null);
-  const [transfer, setTransfer] = useState<'closed' | 'open' | 'import'>('closed');
-  const [pasted, setPasted] = useState('');
-  const [note, setNote] = useState<string | null>(null);
-  const reloadStores = (r: { views: number; favs: number }) => { setViews(load()); setActiveState(loadActive()); setNote(`imported ${r.views} views and ${r.favs} favourites`); };
   const setActive = (n: string | null) => { setActiveState(n); storeActive(n); };
   const persist = (next: Saved[]) => { setViews(next); store(next); };
 
@@ -105,24 +100,10 @@ export function SavedViews({ state, apply }: { state: UIState; apply: (s: UIStat
                 </>}
           </div>
         </div>)}
-        <Separator />
-        <div className="flex flex-wrap items-center gap-1 pt-1.5">
+        {views.length > 1 && <><Separator /><div className="flex justify-between items-center pt-1.5">
           {activeView && <Button size="xs" variant="ghost" onClick={() => setActive(null)} title="keep the filters, just stop tracking this view">detach</Button>}
-          <Button size="xs" variant="ghost" onClick={() => setTransfer(t => (t === 'closed' ? 'open' : 'closed'))} title="move saved views + favourites to another browser or to the live site" data-testid="transfer-btn"><Download className="size-3" />backup / move</Button>
-          {views.length > 1 && <Button size="xs" variant="ghost" className="text-destructive ml-auto" onClick={clear}><Trash2 className="size-3" />clear all</Button>}
-        </div>
-        {transfer !== 'closed' && <div className="mt-1.5 rounded-md border bg-muted/40 p-2 space-y-1.5 text-xs" data-testid="transfer-panel">
-          {!onLiveSite() && <Button asChild size="sm" className="h-7 w-full"><a href={exportUrl()} target="_blank" rel="noreferrer" data-testid="migrate-link"><Upload className="size-3.5" />Move my saved views & favourites to {LIVE.replace('https://', '')}</a></Button>}
-          <div className="flex gap-1.5">
-            <Button size="sm" variant="outline" className="h-7 flex-1" onClick={() => { navigator.clipboard?.writeText(exportJson()); setNote('backup copied to clipboard'); }}><Copy className="size-3.5" />copy backup</Button>
-            <Button size="sm" variant="outline" className="h-7 flex-1" onClick={() => setTransfer(t => (t === 'import' ? 'open' : 'import'))}><Upload className="size-3.5" />paste backup</Button>
-          </div>
-          {transfer === 'import' && <div className="flex gap-1.5">
-            <Input className="h-7 text-xs" placeholder='paste the backup JSON here' value={pasted} onChange={e => setPasted(e.target.value)} />
-            <Button size="sm" className="h-7" disabled={!pasted.trim()} onClick={() => { try { reloadStores(importJson(pasted)); setPasted(''); } catch (e) { setNote('could not read that: ' + String(e)); } }}>import</Button>
-          </div>}
-          {note && <div className="text-muted-foreground">{note}</div>}
-        </div>}
+          <Button size="xs" variant="ghost" className="text-destructive ml-auto" onClick={clear}><Trash2 className="size-3" />clear all</Button>
+        </div></>}
       </PopoverContent>
     </Popover>
   );
