@@ -35,12 +35,14 @@ export function importJson(json: string): { views: number; favs: number } {
 }
 
 /** Called once at startup: consume `#import=...` if present, then reload so every store re-reads storage. */
-export function consumeImportFromHash(): void {
-  const m = /(?:^#|&)import=([^&]+)/.exec(location.hash); if (!m) return;
+/** Returns true when an import was consumed and a reload is pending, so the caller must not mount the app. */
+export function consumeImportFromHash(): boolean {
+  const m = /(?:^#|&)import=([^&]+)/.exec(location.hash); if (!m) return false;
   try {
     const r = importJson(unb64(decodeURIComponent(m[1])));
     sessionStorage.setItem('njsex.imported', JSON.stringify(r));
   } catch (e) { sessionStorage.setItem('njsex.imported', JSON.stringify({ error: String(e) })); }
   history.replaceState(null, '', location.pathname + location.search + location.hash.replace(/(^#|&)import=[^&]+/, '$1').replace(/^#&/, '#').replace(/^#$/, ''));
   location.reload();
+  return true;
 }
