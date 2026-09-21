@@ -52,7 +52,7 @@ export const CATEGORIES: Record<string, CatConfig> = {
       { title: 'Provenance', items: [list('frame_type', 'Frame type', { order: ['track', 'pursuit/low-pro', 'time trial/aero', 'road'] }), list('njs_approved', 'NJS approved', { order: ['yes', 'no', 'unknown'] }),
         flags('prov', ['sloping', 'never_used', 'vintage', 'girls_keirin', 'uci_approved', 'road_frame', 'drilled', 'size_conflict']), range('model_year', 'Model year', 1, '')] },
     ],
-    s => str(s.builder), s => (s.seat_tube_cm != null || s.top_tube_cm != null ? `${s.seat_tube_cm ?? '?'}/${s.top_tube_cm ?? '?'}` : null),
+    s => str(s.builder), s => (s.seat_tube_cm != null || s.top_tube_cm != null ? `${s.seat_tube_cm ?? '?'}|st|${s.top_tube_cm ?? '?'}|tt` : null),
     () => null,
     [{ label: 'builder', key: 'builder' }, { label: 'seat', key: 'seat_tube_cm' }, { label: 'top', key: 'top_tube_cm' }, { label: 'stand', key: 'standover_cm' }, { label: 'rear', key: 'rear_spacing_mm' },
      { label: 'year', key: 'model_year' }, { label: 'color', key: 'color_raw' }, { label: 'tubing', key: 'tubing' }, { label: 'fork', key: 'fork' }, { label: 'headset', key: 'headset' }, { label: 'bb', key: 'bottom_bracket' }],

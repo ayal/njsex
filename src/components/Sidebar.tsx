@@ -50,7 +50,7 @@ function FacetGroupBox({ title, children }: { title: string; children: React.Rea
       <CollapsibleTrigger className="flex w-full items-center justify-between px-2.5 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground">
         {title}<ChevronDown className={cn('size-3.5 transition-transform', !open && '-rotate-90')} />
       </CollapsibleTrigger>
-      <CollapsibleContent className="px-2.5 pb-2.5 space-y-3">{children}</CollapsibleContent>
+      <CollapsibleContent className="px-3 pb-3 space-y-4">{children}</CollapsibleContent>
     </Collapsible>
   );
 }
@@ -71,12 +71,14 @@ function RangeFacet({ def, catItems, pool, state, onChange }: { def: Extract<Fac
   const u = (v: number) => (def.prefix ? def.unit + v : v + def.unit);
   const withValue = pool.filter(p => val(p, def.key) != null).length;
   return (
-    <div data-testid={`range-${def.key}`}>
-      <div className="flex justify-between text-xs mb-2"><span>{def.label}</span><b className="tabular-nums">{u(lo)} – {u(hi)}</b></div>
-      <Slider min={mn} max={mx} step={def.step} value={[lo, hi]} minStepsBetweenThumbs={0}
+    <div data-testid={`range-${def.key}`} className="py-1">
+      <div className="flex items-baseline justify-between text-xs mb-3">
+        <span>{def.label} <span className="text-muted-foreground text-[10px]">· {withValue}</span></span>
+        <b className="tabular-nums">{u(lo)} – {u(hi)}</b>
+      </div>
+      <Slider min={mn} max={mx} step={def.step} value={[lo, hi]} minStepsBetweenThumbs={0} className="px-1"
         onValueChange={v => setLive([v[0], v[1]])}
         onValueCommit={v => { setLive(null); onChange(v[0] <= mn && v[1] >= mx ? null : [v[0], v[1]]); }} />
-      <Hint>{withValue} with a value</Hint>
     </div>
   );
 }

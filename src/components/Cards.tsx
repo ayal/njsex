@@ -34,6 +34,14 @@ export function ColorDot({ color }: { color?: string | null }) {
   return <span className="inline-block size-2.5 rounded-full border border-black/10 align-[-1px] mr-1" style={{ background: COLOR_CSS[color] }} />;
 }
 
+/** Frame sizes come as "59|st|60.5|tt": render numbers bold with small unit labels. */
+export function SizeText({ size, big = false }: { size: string; big?: boolean }) {
+  const parts = size.split('|');
+  if (parts.length !== 4) return <>{size}</>;
+  const U = ({ t }: { t: string }) => <small className={cn('font-normal text-muted-foreground', big ? 'text-xs ml-0.5' : 'text-[10px] ml-0.5')}>{t}</small>;
+  return <>{parts[0]}<U t={parts[1]} /><span className="text-muted-foreground font-normal mx-1">/</span>{parts[2]}<U t={parts[3]} /></>;
+}
+
 export function Price({ p, className }: { p: Item; className?: string }) {
   return <span className={cn('font-semibold', p.avail ? 'text-foreground' : 'text-red-700 dark:text-red-400', className)}>{p.avail ? `$${p.price}` : 'sold out'}</span>;
 }
@@ -60,7 +68,7 @@ function Card({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen
       </div>
       <div className="flex flex-col gap-1 p-2.5 flex-1">
         {head || size ? <>
-          <div className="flex justify-between items-baseline gap-1.5"><span className="font-semibold text-sm">{head ?? '?'}</span>{size && <span className="font-bold text-[15px] whitespace-nowrap">{size}{p.isFrame && <small className="font-normal text-muted-foreground text-[10px] ml-0.5">st/tt</small>}</span>}</div>
+          <div className="flex justify-between items-baseline gap-1.5"><span className="font-semibold text-sm">{head ?? '?'}</span>{size && <span className="font-bold text-[15px] whitespace-nowrap"><SizeText size={size} /></span>}</div>
           {sub && <div className="text-xs text-muted-foreground leading-snug"><ColorDot color={s?.color_primary} />{sub}</div>}
         </> : <div className="text-[13px] leading-snug">{p.title}</div>}
         <Badges p={p} />
@@ -109,7 +117,7 @@ function ShowcaseCard({ p, config, onOpen }: { p: Item; config: CatConfig | null
       <div className="flex flex-col gap-2 p-4 cursor-pointer" onClick={() => onOpen(p)}>
         <div className="flex justify-between items-baseline gap-2">
           <span className="font-semibold text-base">{head ?? p.title}</span>
-          {size && <span className="font-bold text-xl whitespace-nowrap">{size}{p.isFrame && <small className="font-normal text-muted-foreground text-[11px] ml-1">st/tt</small>}</span>}
+          {size && <span className="font-bold text-xl whitespace-nowrap"><SizeText size={size} big /></span>}
         </div>
         {head && <div className="text-xs text-muted-foreground leading-snug">{p.title}</div>}
         {sub && <div className="text-sm text-muted-foreground"><ColorDot color={s?.color_primary} />{sub}</div>}
