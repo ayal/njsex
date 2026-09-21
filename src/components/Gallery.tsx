@@ -6,7 +6,7 @@ import type { Image } from '../data';
 export const sized = (src: string, w: number) => src.replace(/(\.[a-z]+)(\?|$)/i, `_${w}x$1$2`);
 
 /** Decode an image off-screen; resolves when it can be painted without a blank frame. */
-function decode(src: string): Promise<void> {
+export function decode(src: string): Promise<void> {
   const im = new window.Image(); im.src = src;
   return (im.decode ? im.decode() : Promise.resolve()).catch(() => undefined);
 }
@@ -15,7 +15,7 @@ function decode(src: string): Promise<void> {
  * Progressive source: show `low` (expected to be cached) at once, swap to `high` only after it has fully decoded,
  * so the <img> never goes blank. Returns the src to render and whether the high-res is still on its way.
  */
-function useProgressive(low: string, high: string) {
+export function useProgressive(low: string, high: string) {
   const [src, setSrc] = useState(low);
   const [loading, setLoading] = useState(low !== high);
   useEffect(() => {

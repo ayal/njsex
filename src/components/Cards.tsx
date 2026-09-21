@@ -5,6 +5,7 @@ import { BASE, COLOR_CSS, thumb } from '../data';
 import { configFor, itemBadges, type CatConfig } from '../categories';
 import { val } from '../facets';
 import { Star } from '../favs';
+import { decode, sized, useProgressive } from './Gallery';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -69,20 +70,43 @@ function Card({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen
   );
 }
 
-/** Showcase view: one wide card per row with a big photo and the key spec columns inline. */
+/** Inline gallery for the showcase card: browse every photo without opening the detail. Only the main photo opens it. */
+function InlineGallery({ p }: { p: Item }) {
+  const [i, setI] = useState(0);
+  const n = p.images.length; const cur = p.images[Math.min(i, n - 1)];
+  const { src, loading } = useProgressive(sized(cur?.src ?? '', 400), sized(cur?.src ?? '', 1200));
+  useEffect(() => { if (n > 1) for (const d of [1, -1]) decode(sized(p.images[(i + d + n) % n].src, 1200)); }, [i, n, p.images]);
+  const stop = (e: React.SyntheticEvent) => e.stopPropagation();
+  const go = (e: React.MouseEvent, d: number) => { e.stopPropagation(); setI((i + d + n) % n); };
+  if (!n) return <div className="aspect-[4/3] bg-muted" />;
+  return (
+    <div className="relative bg-muted group/g select-none" data-testid="inline-gallery">
+      <img src={src} alt="" className={cn('w-full aspect-[4/3] object-cover block', loading && 'blur-[0.4px]')} />
+      {n > 1 && <>
+        <button className={GNAV + ' left-2'} onClick={e => go(e, -1)} title="previous photo" aria-label="previous photo">‹</button>
+        <button className={GNAV + ' right-2'} onClick={e => go(e, 1)} title="next photo" aria-label="next photo">›</button>
+        <span className="absolute top-2 left-2 rounded-full bg-black/55 text-white text-[11px] px-2 py-0.5 tabular-nums">{i + 1} / {n}</span>
+        {/* thumbnails: hover previews, click pins; neither opens the detail */}
+        <div className="flex gap-1 overflow-x-auto p-1.5 bg-card/95 border-t [scrollbar-width:thin]" onClick={stop} data-testid="inline-thumbs">
+          {p.images.map((im, k) => <img key={im.id} loading="lazy" src={thumb(im.src)} alt="" onMouseEnter={() => setI(k)} onClick={e => { e.stopPropagation(); setI(k); }}
+            className={cn('w-16 h-12 object-cover rounded-sm cursor-pointer shrink-0 border-2', k === i ? 'border-primary opacity-100' : 'border-transparent opacity-60 hover:opacity-100')} />)}
+        </div>
+      </>}
+      <Star id={p.id} className="absolute top-2 right-2 bg-white/80 dark:bg-black/60 rounded-full size-8 text-[19px]" />
+    </div>
+  );
+}
+const GNAV = 'absolute top-[38%] -translate-y-1/2 rounded bg-black/45 hover:bg-black/70 text-white text-[30px] leading-none px-2.5 pt-0.5 pb-2 cursor-pointer opacity-0 group-hover/g:opacity-100 transition-opacity';
+
+/** Showcase view: one wide card per row with an inline gallery and the key spec columns. */
 function ShowcaseCard({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen: (p: Item) => void }) {
   const s = p.specs, c = cfgFor(p, config);
   const head = c && s ? c.head(s) : null, size = c && s ? c.size(s) : null, sub = c && s ? c.sub(s) : null;
   const specs = (c?.cols ?? []).filter(col => !col.key.startsWith('_')).map(col => [col.label, val(p, col.key)] as const).filter(([, v]) => v != null && v !== 'unknown' && v !== false).slice(0, 8);
-  const pics = p.images.slice(0, 4);
   return (
-    <div className="group grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] rounded-lg border bg-card overflow-hidden cursor-pointer hover:border-foreground/40 transition-colors" onClick={() => onOpen(p)} data-testid="showcase-card">
-      <div className="relative bg-muted">
-        <img loading="lazy" src={p.images[0] ? p.images[0].src.replace(/(\.[a-z]+)(\?|$)/i, '_1200x$1$2') : ''} alt="" className="w-full aspect-[4/3] object-cover" />
-        {pics.length > 1 && <div className="absolute bottom-2 left-2 flex gap-1">{pics.slice(1).map(im => <img key={im.id} loading="lazy" src={thumb(im.src)} alt="" className="w-14 h-10 object-cover rounded border border-white/70 shadow" />)}</div>}
-        <Star id={p.id} className="absolute top-2 right-2 bg-white/80 dark:bg-black/60 rounded-full size-8 text-[19px]" />
-      </div>
-      <div className="flex flex-col gap-2 p-4">
+    <div className="group grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] rounded-lg border bg-card overflow-hidden hover:border-foreground/40 transition-colors" data-testid="showcase-card">
+      <div className="cursor-zoom-in" onClick={() => onOpen(p)} title="open details"><InlineGallery p={p} /></div>
+      <div className="flex flex-col gap-2 p-4 cursor-pointer" onClick={() => onOpen(p)}>
         <div className="flex justify-between items-baseline gap-2">
           <span className="font-semibold text-base">{head ?? p.title}</span>
           {size && <span className="font-bold text-xl whitespace-nowrap">{size}{p.isFrame && <small className="font-normal text-muted-foreground text-[11px] ml-1">st/tt</small>}</span>}
