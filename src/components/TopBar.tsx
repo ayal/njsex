@@ -6,10 +6,10 @@ import { SORTS, type FacetDef, type FacetState, type RangeState } from '../facet
 import type { UIState } from '../useHashState';
 import { SavedViews } from './SavedViews';
 
-interface Props { catalog: Catalog; config: CatConfig | null; defs: Map<string, FacetDef>; state: UIState; resultCount: number; catCount: number; update: (p: Partial<UIState>) => void; }
+interface Props { catalog: Catalog; config: CatConfig | null; defs: Map<string, FacetDef>; state: UIState; resultCount: number; catCount: number; favCount: number; update: (p: Partial<UIState>) => void; }
 
 
-export function TopBar({ catalog, config, defs, state, resultCount, catCount, update }: Props) {
+export function TopBar({ catalog, config, defs, state, resultCount, catCount, favCount, update }: Props) {
   // keep --topH in sync with the bar's real height so sticky sidebar/table headers sit right under it
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -36,8 +36,9 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, up
           {specSorts.length > 0 && <optgroup label="by spec">{specSorts.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</optgroup>}
         </select>
         <span className="seg">
-          {(['all', 'in', 'sold'] as const).map(a => <button key={a} className={state.avail === a ? 'on' : ''} onClick={() => update({ avail: a })}>{{ all: 'all', in: 'in stock', sold: 'sold out' }[a]}</button>)}
+          {(['all', 'in', 'sold'] as const).map(a => <button key={a} className={state.avail === a && !state.favs ? 'on' : ''} disabled={state.favs} onClick={() => update({ avail: a })}>{{ all: 'all', in: 'in stock', sold: 'sold out' }[a]}</button>)}
         </span>
+        <button className={`favs-btn ${state.favs ? 'on' : ''}`} title="show only favourites" onClick={() => update({ favs: !state.favs })}>★ favs{favCount ? ` (${favCount})` : ''}</button>
         <span className="seg">
           <button className={state.view === 'grid' ? 'on' : ''} onClick={() => update({ view: 'grid' })}>grid</button>
           <button className={state.view === 'table' ? 'on' : ''} onClick={() => update({ view: 'table' })}>table</button>

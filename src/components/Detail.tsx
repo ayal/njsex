@@ -4,6 +4,7 @@ import { BASE, FRAME_DUPES, GRADE_LABEL } from '../data';
 import { FLAG_LABEL } from '../categories';
 import { Price } from './Cards';
 import { Gallery } from './Gallery';
+import { Star } from '../favs';
 
 interface Props { p: Item; catalog: Catalog; onClose: () => void; }
 
@@ -14,7 +15,7 @@ export function Detail({ p, catalog, onClose }: Props) {
     <div className="detail" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="panel">
         <span className="close" onClick={onClose}>✕</span>
-        <h2>{p.title}</h2>
+        <h2><Star id={p.id} className="detail-star" /> {p.title}</h2>
         <div className="sub"><Price p={p} /> · {p.product_type} · {colls} · listed {p.created_at.slice(0, 10)} · updated {p.updated_at.slice(0, 10)} · <a href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">open on njs-export.com ↗</a> · <a href={location.href} onClick={e => { e.preventDefault(); navigator.clipboard?.writeText(location.href); (e.currentTarget as HTMLElement).textContent = 'link copied'; }}>copy link to this view</a></div>
         <Gallery images={p.images} title={p.title} />
         <div className="cols">

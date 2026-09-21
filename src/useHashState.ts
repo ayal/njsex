@@ -8,8 +8,10 @@ export interface UIState {
   cat: string; view: 'grid' | 'table'; sort: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState;
   /** handle of the product open in the detail panel */
   open: string | null;
+  /** show only favourites */
+  favs: boolean;
 }
-export const DEFAULT_STATE: UIState = { cat: 'frames', view: 'grid', sort: 'created_desc', q: '', avail: 'in', facets: {}, open: null };
+export const DEFAULT_STATE: UIState = { cat: 'frames', view: 'grid', sort: 'created_desc', q: '', avail: 'in', facets: {}, open: null, favs: false };
 
 function read(): UIState {
   const raw = location.hash.slice(1);
@@ -28,6 +30,7 @@ function read(): UIState {
     const a = q.get('avail'); if (a === 'all' || a === 'sold') s.avail = a;
     if (q.has('f')) { try { s.facets = JSON.parse(q.get('f')!); } catch { /* ignore bad facets */ } }
     if (q.has('p')) s.open = q.get('p');
+    if (q.get('favs') === '1') s.favs = true;
     return s;
   } catch { return DEFAULT_STATE; }
 }
@@ -41,6 +44,7 @@ function serialize(s: UIState): string {
   if (s.avail !== 'in') q.set('avail', s.avail);
   if (Object.keys(s.facets).length) q.set('f', JSON.stringify(s.facets));
   if (s.open) q.set('p', s.open);
+  if (s.favs) q.set('favs', '1');
   // keep the facet JSON readable in the address bar
   return '#' + q.toString().replace(/%7B/gi, '{').replace(/%7D/gi, '}').replace(/%22/g, '"').replace(/%3A/gi, ':').replace(/%2C/gi, ',').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
 }

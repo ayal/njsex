@@ -40,7 +40,7 @@ export function Gallery({ images, title }: { images: Image[]; title: string }) {
   if (!n) return null;
   return (
     <div className="gallery">
-      <div className="g-main" onClick={() => setLightbox(true)} title="click to view full size" style={{ aspectRatio: cur.width && cur.height ? `${cur.width} / ${cur.height}` : undefined }}>
+      <div className="g-main" onClick={() => setLightbox(true)} title="click to view full size">
         <img src={src} alt={title} className={loading ? 'soft' : ''} />
         {loading && <LoadingPill text="loading" />}
         {n > 1 && <>
@@ -107,7 +107,7 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
       <div className="lb-top" onClick={e => e.stopPropagation()}>
         <span>{index + 1} / {n}</span>
         <span className="lb-hint">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
-        {loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}
+        <span className="lb-pill-slot">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
         <a href={img.src} target="_blank" rel="noreferrer">open original ↗</a>
         <button className="lb-x" onClick={onClose}>✕</button>
       </div>

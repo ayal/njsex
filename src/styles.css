@@ -148,13 +148,13 @@ button, select, input { font: inherit; }
 
 /* gallery in the detail panel */
 .gallery { margin: 4px 0 16px; }
-.g-main { position: relative; background: #111; border-radius: 6px; overflow: hidden; cursor: zoom-in; display: flex; justify-content: center; }
-.g-main img { max-width: 100%; max-height: 70vh; display: block; }
+.g-main { position: relative; background: #111; border-radius: 6px; overflow: hidden; cursor: zoom-in; height: min(60vh, 560px); }  /* fixed box: photos letterbox inside, nothing below moves */
+.g-main img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .g-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #0008; color: #fff; border: 0; font-size: 34px; line-height: 1; padding: 6px 12px 10px; cursor: pointer; border-radius: 4px; }
 .g-nav.prev { left: 8px; } .g-nav.next { right: 8px; }
 .g-nav:hover, .lb-nav:hover { background: #000c; }
 .g-count { position: absolute; bottom: 8px; right: 10px; background: #0008; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
-.g-strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px; }
+.g-strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px; height: 70px; }
 .g-strip img, .lb-strip img { width: 72px; height: 54px; object-fit: cover; border-radius: 3px; cursor: pointer; opacity: .55; border: 2px solid transparent; flex: 0 0 auto; }
 .g-strip img.on, .lb-strip img.on, .g-strip img:hover, .lb-strip img:hover { opacity: 1; border-color: var(--accent); }
 
@@ -162,6 +162,7 @@ button, select, input { font: inherit; }
 .lb { position: fixed; inset: 0; background: #000e; z-index: 50; display: flex; flex-direction: column; color: #ddd; user-select: none; }
 .lb-top { display: flex; align-items: center; gap: 16px; padding: 10px 16px; font-size: 13px; background: #000; }
 .lb-top a { color: #9cf; margin-left: auto; }
+.lb-top > span:first-child { min-width: 52px; }
 .lb-hint { color: #888; }
 .lb-x { background: none; border: 0; color: #fff; font-size: 22px; cursor: pointer; padding: 0 4px; }
 .lb-pane { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; position: relative; }
@@ -173,11 +174,22 @@ button, select, input { font: inherit; }
 .lb-pane.z2 img { max-width: none; cursor: zoom-out; }
 .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #0008; color: #fff; border: 0; font-size: 48px; line-height: 1; padding: 8px 16px 14px; cursor: pointer; border-radius: 6px; }
 .lb-nav.prev { left: 12px; } .lb-nav.next { right: 12px; }
-.lb-strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; background: #000; justify-content: center; }
+.lb-strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; background: #000; justify-content: center; height: 74px; }
 
 /* progressive image loading */
 .g-main img.soft, .lb-pane img.soft { filter: blur(0.4px); }
 .img-loading { position: absolute; left: 10px; bottom: 8px; background: #0009; color: #fff; font-size: 11px; padding: 3px 9px 3px 7px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; pointer-events: none; }
 .lb-top .img-loading { position: static; background: #333; }
+.lb-pill-slot { display: inline-block; min-width: 170px; }  /* reserved so the toolbar never shifts */
 .spin { width: 10px; height: 10px; border: 2px solid #fff6; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* favourites */
+.star { background: none; border: 0; cursor: pointer; color: #bbb; font-size: 20px; line-height: 1; padding: 2px 4px; }
+.star.on { color: #f5a623; }
+.card-star { position: absolute; top: 6px; right: 6px; background: #fffc; border-radius: 50%; width: 28px; height: 28px; padding: 0; font-size: 17px; opacity: 0; transition: opacity .12s; }
+.card:hover .card-star, .card-star.on { opacity: 1; }
+.detail-star { font-size: 22px; vertical-align: -2px; }
+.favs-btn { border: 1px solid #bbb; background: #fff; border-radius: 4px; padding: 6px 10px; cursor: pointer; }
+.favs-btn.on { background: #f5a623; border-color: #f5a623; color: #fff; }
+.seg button:disabled { color: #bbb; cursor: default; }

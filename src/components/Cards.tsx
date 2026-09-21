@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Item } from '../data';
 import { COLOR_CSS, thumb } from '../data';
 import { itemBadges, type CatConfig } from '../categories';
+import { Star } from '../favs';
 
 const PAGE = 120;
 
@@ -32,6 +33,7 @@ function Card({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen
       <div className="pic">
         <img loading="lazy" src={thumb(p.images[0]?.src)} alt="" />
         {last && <img loading="lazy" className="alt" src={thumb(last.src)} alt="" />}
+        <Star id={p.id} className="card-star" />
       </div>
       <div className="body">
         {head || size ? <>

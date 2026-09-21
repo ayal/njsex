@@ -37,7 +37,7 @@ function predicate(def: FacetDef, state: RangeState | SetState): Pred {
   }
 }
 
-export interface Query { cat: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState; }
+export interface Query { cat: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState; onlyIds?: Set<number> | null; }
 
 export function filterItems(items: Item[], query: Query, defs: Map<string, FacetDef>, exceptKey: string | null = null): Item[] {
   const q = query.q.trim().toLowerCase();
@@ -47,6 +47,7 @@ export function filterItems(items: Item[], query: Query, defs: Map<string, Facet
     const def = defs.get(k); if (def) preds.push(predicate(def, st));
   }
   return items.filter(p =>
+    (!query.onlyIds || query.onlyIds.has(p.id)) &&
     (!query.cat || p.colls.includes(query.cat)) &&
     (query.avail === 'all' || (query.avail === 'in') === p.avail) &&
     (!q || p.text.includes(q)) &&

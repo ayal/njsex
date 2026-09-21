@@ -3,6 +3,7 @@ import { loadCatalog, type Catalog, type Item } from './data';
 import { SORTS, defsOf, filterItems, specSort } from './facets';
 import { configFor } from './categories';
 import { useHashState } from './useHashState';
+import { useFavs } from './favs';
 import { TopBar } from './components/TopBar';
 import { Sidebar } from './components/Sidebar';
 import { Grid } from './components/Cards';
@@ -13,13 +14,14 @@ export default function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [state, update] = useHashState();
+  const favs = useFavs();
 
   useEffect(() => { loadCatalog().then(setCatalog, e => setError(String(e))); }, []);
 
   const config = useMemo(() => configFor(state.cat), [state.cat]);
   const defs = useMemo(() => defsOf(config?.facets ?? []), [config]);
   const catItems = useMemo(() => (catalog ? catalog.items.filter(p => !state.cat || p.colls.includes(state.cat)) : []), [catalog, state.cat]);
-  const query = useMemo(() => ({ cat: state.cat, q: state.q, avail: state.avail, facets: state.facets }), [state.cat, state.q, state.avail, state.facets]);
+  const query = useMemo(() => ({ cat: state.cat, q: state.q, avail: state.favs ? 'all' as const : state.avail, facets: state.facets, onlyIds: state.favs ? favs : null }), [state.cat, state.q, state.avail, state.facets, state.favs, favs]);
   const result = useMemo(() => {
     if (!catalog) return [];
     const cmp = SORTS[state.sort]?.cmp ?? specSort(state.sort) ?? SORTS.created_desc.cmp;
@@ -38,7 +40,8 @@ export default function App() {
   const pending = config ? catItems.length - (catalog.specsCount[state.cat] ?? 0) : 0;
   return (
     <>
-      <TopBar catalog={catalog} config={config} defs={defs} state={state} resultCount={result.length} catCount={catItems.length} update={update} />
+      <TopBar catalog={catalog} config={config} defs={defs} state={state} resultCount={result.length} catCount={catItems.length} favCount={favs.size} update={update} />
+      {state.favs && result.length === 0 && <div className="loading">no favourites {state.cat ? 'in this category' : ''} yet — click ☆ on any card to save it</div>}
       <div className="main">
         {config && <Sidebar groups={config.facets} defs={defs} items={catalog.items} catItems={catItems} query={query} onChange={facets => update({ facets })} />}
         <div className="content">
