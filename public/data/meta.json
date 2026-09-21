@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-21T21:57:38+00:00",
+ "generated_at": "2026-09-22T00:58:30+03:00",
  "products": 3586,
  "live": 3586,
  "in_stock": 3154,
@@ -7,13 +7,15 @@
  "parts_with_specs": 2633,
  "jev_pending": 0,
  "last_refresh": {
-  "new": 0,
+  "new": [],
   "timestamp_touched": 3586,
-  "content_changed": 0,
-  "sold": 1,
-  "restocked": 0,
-  "price_changed": 0,
-  "gone": 0,
+  "content_changed": [],
+  "sold": [
+   10281510011179
+  ],
+  "restocked": [],
+  "price_changed": [],
+  "gone": [],
   "total": 3586,
   "live": 3586,
   "specs_invalidated": 0,
