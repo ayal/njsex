@@ -3,11 +3,12 @@ import type { AnySpecs, Catalog, Item, Specs } from '../data';
 import { BASE, FRAME_DUPES, GRADE_LABEL } from '../data';
 import { FLAG_LABEL } from '../categories';
 import { Price } from './Cards';
+import { Gallery } from './Gallery';
 
 interface Props { p: Item; catalog: Catalog; onClose: () => void; }
 
 export function Detail({ p, catalog, onClose }: Props) {
-  useEffect(() => { const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, [onClose]);
+  useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && !document.querySelector('.lb')) onClose(); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, [onClose]);
   const colls = catalog.collections.filter(c => p.colls.includes(c.handle) && !FRAME_DUPES.has(c.handle)).map(c => c.title).join(', ');
   return (
     <div className="detail" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -15,6 +16,7 @@ export function Detail({ p, catalog, onClose }: Props) {
         <span className="close" onClick={onClose}>✕</span>
         <h2>{p.title}</h2>
         <div className="sub"><Price p={p} /> · {p.product_type} · {colls} · listed {p.created_at.slice(0, 10)} · updated {p.updated_at.slice(0, 10)} · <a href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">open on njs-export.com ↗</a></div>
+        <Gallery images={p.images} title={p.title} />
         <div className="cols">
           <div>{p.specs ? (p.isFrame ? <FrameSpecTables s={p.specs as Specs} /> : <GenericSpecTable s={p.specs} />) : p.primaryCat && <div className="hint">specs not parsed yet</div>}</div>
           <div>
@@ -24,7 +26,6 @@ export function Detail({ p, catalog, onClose }: Props) {
             {p.variants.length > 1 && <><h5>Variants</h5><div>{p.variants.map(v => <span key={v.id} className={`bd ${v.available ? '' : 'njsno'}`}>{(v as unknown as { title?: string }).title ?? v.id} ${v.price}</span>)}</div></>}
           </div>
         </div>
-        <div className="imgs">{p.images.map(i => <img key={i.id} loading="lazy" src={i.src} alt="" />)}</div>
       </div>
     </div>
   );
