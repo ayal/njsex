@@ -109,13 +109,13 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
   const up = () => { drag.current = null; };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black/95 text-neutral-300 select-none" onClick={onClose} data-lightbox data-testid="lightbox">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-black/95 text-neutral-300 select-none [pointer-events:auto]" style={{ pointerEvents: 'auto' }} onClick={onClose} data-lightbox data-testid="lightbox">
       <div className="flex items-center gap-4 px-4 py-2.5 text-[13px] bg-black" onClick={e => e.stopPropagation()}>
         <span className="min-w-[52px] tabular-nums">{index + 1} / {n}</span>
         <span className="text-neutral-500">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
         <span className="inline-block min-w-[170px]">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
         <a className="ml-auto text-sky-300 hover:underline" href={img.src} target="_blank" rel="noreferrer">open original ↗</a>
-        <button className="text-white text-[22px] leading-none px-1 cursor-pointer" onClick={onClose}>✕</button>
+        <button className="text-white text-[22px] leading-none px-3 py-1 -mr-2 cursor-pointer rounded hover:bg-white/10" onClick={onClose} aria-label="close" data-testid="lb-close">✕</button>
       </div>
       <div ref={pane} className={`flex-1 overflow-auto relative ${zoom === 0 ? 'flex items-center justify-center' : 'block'} ${zoom > 0 ? (drag.current ? 'cursor-grabbing' : 'cursor-grab') : ''}`} data-testid="lb-pane" onMouseDown={down} onMouseMove={move} onMouseUp={up} onMouseLeave={up} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
         <img src={src} alt="" onClick={onImgClick} draggable={false} className={`block ${zoom === 0 ? 'max-w-full max-h-full object-contain cursor-zoom-in' : zoom === 1 ? 'max-w-none cursor-zoom-in' : 'max-w-none cursor-zoom-out'} ${loading ? 'blur-[0.4px]' : ''}`}

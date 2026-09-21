@@ -70,6 +70,7 @@ function Card({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen
         {head || size ? <>
           <div className="flex justify-between items-baseline gap-1.5"><span className="font-semibold text-sm">{head ?? '?'}</span>{size && <span className="font-bold text-[15px] whitespace-nowrap"><SizeText size={size} /></span>}</div>
           {sub && <div className="text-xs text-muted-foreground leading-snug"><ColorDot color={s?.color_primary} />{sub}</div>}
+          {!p.isFrame && <div className="text-[11px] text-muted-foreground leading-snug line-clamp-2" title={p.title}>{p.title}</div>}
         </> : <div className="text-[13px] leading-snug">{p.title}</div>}
         <Badges p={p} />
         <div className="flex justify-between items-center gap-1 text-xs text-muted-foreground mt-auto pt-1"><Price p={p} /><span className="flex items-center gap-2">{p.created_at.slice(0, 10)}<ShopLink p={p} /></span></div>

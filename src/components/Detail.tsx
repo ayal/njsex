@@ -1,4 +1,4 @@
-import { ExternalLink, Link as LinkIcon } from 'lucide-react';
+import { ExternalLink, Link as LinkIcon, X } from 'lucide-react';
 import type { AnySpecs, Catalog, Item, Specs } from '../data';
 import { BASE, FRAME_DUPES, GRADE_LABEL } from '../data';
 import { FLAG_LABEL } from '../categories';
@@ -15,7 +15,13 @@ export function Detail({ p, catalog, onClose }: Props) {
   const colls = catalog.collections.filter(c => p.colls.includes(c.handle) && !FRAME_DUPES.has(c.handle)).map(c => c.title).join(', ');
   return (
     <Dialog open onOpenChange={o => { if (!o && !document.querySelector('[data-lightbox]')) onClose(); }}>
-      <DialogContent className="sm:max-w-[1000px] w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-h-[calc(100vh-1rem)] overflow-y-auto overflow-x-hidden p-4 sm:p-6 gap-3 detail [&_*]:min-w-0 break-words [overflow-wrap:anywhere]" data-testid="detail">
+      <DialogContent showCloseButton={false} className="sm:max-w-[1000px] sm:w-[calc(100vw-2rem)] sm:max-h-[calc(100dvh-2rem)] max-sm:inset-0 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:w-screen max-sm:max-w-none max-sm:h-dvh max-sm:max-h-dvh max-sm:rounded-none max-sm:border-0 overflow-y-auto overflow-x-hidden p-0 gap-0 detail [&_*]:min-w-0 break-words [overflow-wrap:anywhere]" data-testid="detail">
+        {/* sticky close row: always reachable even when the title wraps to several lines */}
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-2 bg-card/95 backdrop-blur border-b">
+          <span className="text-xs text-muted-foreground truncate">{p.product_type}</span>
+          <Button size="sm" variant="outline" className="h-8" onClick={onClose} data-testid="detail-close"><X className="size-4" />Close</Button>
+        </div>
+        <div className="p-4 sm:p-6 pt-3 sm:pt-4 space-y-3">
         <DialogHeader className="text-left space-y-1">
           <DialogTitle className="text-lg leading-snug flex items-start gap-1.5"><Star id={p.id} className="text-[22px] -mt-0.5 shrink-0" />{p.title}</DialogTitle>
           <DialogDescription className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
@@ -34,6 +40,7 @@ export function Detail({ p, catalog, onClose }: Props) {
             <H>Tags</H><div className="flex flex-wrap gap-1">{p.tags.length ? p.tags.map(t => <Badge key={t} variant="secondary" className="text-[10px] h-4 px-1.5">{t}</Badge>) : '—'}</div>
             {p.variants.length > 1 && <><H>Variants</H><div className="flex flex-wrap gap-1">{p.variants.map(v => <Badge key={v.id} variant={v.available ? 'secondary' : 'destructive'} className="text-[10px] h-4 px-1.5">{(v as unknown as { title?: string }).title ?? v.id} ${v.price}</Badge>)}</div></>}
           </div>
+        </div>
         </div>
       </DialogContent>
     </Dialog>
