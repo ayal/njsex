@@ -42,7 +42,7 @@ export interface Item extends RawProduct {
   specs: AnySpecs | null;
 }
 
-export interface Meta { generated_at: string; products: number; live: number; in_stock: number; frames_with_specs: number; parts_with_specs: number; last_refresh?: Record<string, unknown>; }
+export interface Meta { generated_at: string; products: number; live: number; in_stock: number; frames_with_specs: number; parts_with_specs: number; jev_pending?: number; last_refresh?: Record<string, unknown>; }
 
 export interface Catalog {
   items: Item[]; collections: Collection[]; membership: Record<string, number[]>; meta: Meta | null;

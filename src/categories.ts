@@ -181,6 +181,7 @@ export function itemBadges(p: Item): { cls: string; text: string; title?: string
   const s = p.specs, out: { cls: string; text: string; title?: string }[] = [];
   if (p.gone) out.push({ cls: 'njsno', text: 'no longer listed', title: `not on the store since ${p._gone_at?.slice(0, 10)}` });
   if (!s) return CATEGORIES[p.primaryCat] ? [{ cls: 'pend', text: 'specs pending' }] : [];
+  if (s.jev_pending) out.push({ cls: 'pend', text: 'partial specs', title: 'new listing: numbers are parsed, brand / condition details are still being extracted' });
   if (typeof s.condition_score === 'number') out.push({ cls: `g${s.condition_score}`, text: `${s.condition_score} ${GRADE_LABEL[s.condition_score] ?? ''}` });
   if (s.never_used && s.condition_score !== 10) out.push({ cls: 'new', text: 'never used' });
   if (s.njs_approved === 'no') out.push({ cls: 'njsno', text: 'non-NJS' });

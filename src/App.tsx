@@ -68,7 +68,7 @@ export default function App() {
       <footer className="mt-6 border-t px-4 py-6 pb-10 text-xs text-muted-foreground leading-relaxed">
         Unofficial read-only browser of the public <a className="text-primary hover:underline" href="https://www.njs-export.com" target="_blank" rel="noreferrer">njs-export.com</a> catalog. Not affiliated with NJS Export.
         All listings, photos and prices are theirs; every item links to the original page, nothing is sold here.
-        {catalog.meta && <> Data as of {catalog.meta.generated_at.slice(0, 16).replace('T', ' ')} · {catalog.meta.live} listings, {catalog.meta.in_stock} in stock.</>}
+        {catalog.meta && <> Data as of {catalog.meta.generated_at.slice(0, 16).replace('T', ' ')} · {catalog.meta.live} listings, {catalog.meta.in_stock} in stock{catalog.meta.jev_pending ? <> · {catalog.meta.jev_pending} new listings with partial specs</> : null}.</>}
       </footer>
     </TooltipProvider>
   );
