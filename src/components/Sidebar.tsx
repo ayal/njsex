@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import type { Item } from '../data';
 import { COLOR_CSS } from '../data';
@@ -19,13 +19,27 @@ interface Props {
 }
 
 export function Sidebar({ groups, defs, items, catItems, query, onChange }: Props) {
+  // Sticky like a shop sidebar: scrolls with the page until its bottom is on screen, then pins. If it is shorter than
+  // the viewport it pins right under the top bar. No max-height, no inner scrollbar, so nothing ever looks clipped.
+  const ref = useRef<HTMLElement>(null);
+  const [top, setTop] = useState<string>('var(--topH)');
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const sync = () => {
+      const topH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topH')) || 0;
+      const free = window.innerHeight - topH;
+      setTop(el.offsetHeight <= free ? `${topH}px` : `${window.innerHeight - el.offsetHeight - 12}px`);
+    };
+    sync(); const ro = new ResizeObserver(sync); ro.observe(el); window.addEventListener('resize', sync);
+    return () => { ro.disconnect(); window.removeEventListener('resize', sync); };
+  }, []);
   const set = (key: string, st: RangeState | SetState | null) => {
     const f = { ...query.facets };
     if (st == null) delete f[key]; else f[key] = st;
     onChange(f);
   };
   return (
-    <aside className="w-[270px] shrink-0 sticky top-[var(--topH)] max-h-[calc(100vh-var(--topH))] overflow-y-auto pl-4 pr-3 py-3 space-y-2.5" data-testid="sidebar">
+    <aside ref={ref} className="w-[270px] shrink-0 sticky self-start pl-4 pr-3 py-3 space-y-2.5" style={{ top }} data-testid="sidebar">
       {groups.map(g => <FacetGroupBox key={g.title} title={g.title}>
         {g.items.map(def => {
           // pool = items matching every OTHER filter, so counts show what selecting this option would leave

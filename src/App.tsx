@@ -50,7 +50,8 @@ export default function App() {
       <TopBar catalog={catalog} config={config} defs={defs} state={state} resultCount={result.length} catCount={catItems.length} favCount={favs.size} update={update} onFilters={() => setDrawer(true)} />
       {state.favs && result.length === 0 && <div className="p-10 text-center text-muted-foreground">no favourites yet — click ☆ on any card to save it</div>}
       <div className="flex items-start">
-        <div className="hidden md:block">{sidebar}</div>
+        {/* `contents` so the aside is the flex item itself: a wrapper box would be its sticky containing block */}
+        <div className="hidden md:contents">{sidebar}</div>
         <div className="flex-1 min-w-0 px-3 sm:px-4 py-3 pb-10">
           {pending > 0 && <div className="mb-2.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 px-2.5 py-1.5 text-xs dark:bg-amber-950 dark:text-amber-100 dark:border-amber-800">{pending} of {catItems.length} items in this category still waiting for parsed specs, reload later to pick them up.</div>}
           {state.view === 'table' ? <Table items={result} cols={config?.cols ?? null} onOpen={setOpen} /> : <Grid items={result} config={config} view={state.view as 'grid' | 'showcase'} onOpen={setOpen} />}
@@ -60,7 +61,7 @@ export default function App() {
       <Sheet open={drawer} onOpenChange={setDrawer}>
         <SheetContent side="left" className="w-[320px] max-w-[90vw] p-0 overflow-y-auto">
           <SheetHeader className="px-4 py-3 border-b"><SheetTitle className="text-sm">Filters</SheetTitle></SheetHeader>
-          <div className="[&>aside]:static [&>aside]:w-full [&>aside]:max-h-none [&>aside]:px-3">{sidebar}</div>
+          <div className="[&>aside]:static [&>aside]:w-full [&>aside]:px-3">{sidebar}</div>
         </SheetContent>
       </Sheet>
       {open && <Detail p={open} catalog={catalog} onClose={() => setOpen(null)} />}
