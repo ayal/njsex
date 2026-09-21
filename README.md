@@ -31,7 +31,7 @@ is loaded into memory and filtered client-side.
     npm install
     npm run dev          # http://localhost:5173
 
-The data in `public/data/` is written by the companion pipeline repository (`make publish` there). This repo only renders it.
+The data files in `public/data/` are generated offline and committed. This repo only renders them.
 
 ## Deploying
 

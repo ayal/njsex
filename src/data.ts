@@ -1,4 +1,4 @@
-// Types for the scraped Shopify catalog and the Jev-derived frame specs, plus loading/merging.
+// Types for the catalog data files and the per-product specs, plus loading/merging.
 
 export interface Variant { id: number; price: string; available: boolean; grams: number; sku: string | null; }
 export interface Image { id: number; src: string; position: number; width: number; height: number; }
@@ -19,7 +19,7 @@ export interface Specs {
   color_raw: string | null; condition_raw: string | null; condition_stated: boolean;
   headset_raw: string | null; bb_raw: string | null; drilled: boolean;
   spec_keys_found: string[]; extra_lines: string[];
-  // jev-derived
+  // categorical fields (with `${field}_confidence` / `${field}_probability` companions)
   builder: string; headset: string; bottom_bracket: string; material: string; tubing: string; fork: string;
   construction: string; dropouts: string; njs_approved: 'yes' | 'no' | 'unknown'; model_decade: string;
   color_primary: string; color_secondary: string; condition_grade: string; condition_score: Grade | null;
@@ -72,7 +72,7 @@ export async function loadCatalog(): Promise<Catalog> {
     json<Record<string, { file: string }>>('specs/index.json', {}),
     json<Meta | null>('meta.json', null),
   ]);
-  if (!pl) throw new Error('products.jsonl not found under ' + D + ' — run `make publish` in the pipeline repo');
+  if (!pl) throw new Error('products.jsonl not found under ' + D);
   const partFiles = await Promise.all(Object.entries(index).map(async ([cat, v]) => [cat, await text(v.file)] as const));
   const specsById = new Map<number, AnySpecs>();
   const primary = new Map<number, string>();
