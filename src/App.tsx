@@ -25,8 +25,11 @@ export default function App() {
   const config = useMemo(() => (state.favs ? null : configFor(state.cat)), [state.cat, state.favs]);
   const defs = useMemo(() => defsOf(config?.facets ?? []), [config]);
   const catItems = useMemo(() => (catalog ? catalog.items.filter(p => !state.cat || p.colls.includes(state.cat)) : []), [catalog, state.cat]);
-  const query = useMemo(() => ({ cat: state.favs ? '' : state.cat, q: state.q, avail: state.favs ? 'all' as const : state.avail, facets: state.favs ? {} : state.facets, onlyIds: state.favs ? favs : null }),
-    [state.cat, state.q, state.avail, state.facets, state.favs, favs]);
+  // only depend on the favourites set while the favs filter is on; otherwise starring a card would rebuild the
+  // result list and reset the grid's paging (which is what made the page jump)
+  const onlyIds = state.favs ? favs : null;
+  const query = useMemo(() => ({ cat: state.favs ? '' : state.cat, q: state.q, avail: state.favs ? 'all' as const : state.avail, facets: state.favs ? {} : state.facets, onlyIds }),
+    [state.cat, state.q, state.avail, state.facets, state.favs, onlyIds]);
   const result = useMemo(() => {
     if (!catalog) return [];
     const cmp = SORTS[state.sort]?.cmp ?? specSort(state.sort) ?? SORTS.created_desc.cmp;
@@ -50,7 +53,7 @@ export default function App() {
         <div className="hidden md:block">{sidebar}</div>
         <div className="flex-1 min-w-0 px-3 sm:px-4 py-3 pb-10">
           {pending > 0 && <div className="mb-2.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 px-2.5 py-1.5 text-xs dark:bg-amber-950 dark:text-amber-100 dark:border-amber-800">{pending} of {catItems.length} items in this category still waiting for parsed specs, reload later to pick them up.</div>}
-          {state.view === 'table' ? <Table items={result} cols={config?.cols ?? null} onOpen={setOpen} /> : <Grid items={result} config={config} view={state.view} onOpen={setOpen} />}
+          {state.view === 'table' ? <Table items={result} cols={config?.cols ?? null} onOpen={setOpen} /> : <Grid items={result} config={config} view={state.view as 'grid' | 'showcase'} onOpen={setOpen} />}
         </div>
       </div>
       {/* mobile: the same sidebar in a drawer */}

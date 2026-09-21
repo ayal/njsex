@@ -69,14 +69,14 @@ function Card({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen
   );
 }
 
-/** Large view: one wide card per row with a big photo and the key spec columns inline. */
-function LargeCard({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen: (p: Item) => void }) {
+/** Showcase view: one wide card per row with a big photo and the key spec columns inline. */
+function ShowcaseCard({ p, config, onOpen }: { p: Item; config: CatConfig | null; onOpen: (p: Item) => void }) {
   const s = p.specs, c = cfgFor(p, config);
   const head = c && s ? c.head(s) : null, size = c && s ? c.size(s) : null, sub = c && s ? c.sub(s) : null;
   const specs = (c?.cols ?? []).filter(col => !col.key.startsWith('_')).map(col => [col.label, val(p, col.key)] as const).filter(([, v]) => v != null && v !== 'unknown' && v !== false).slice(0, 8);
   const pics = p.images.slice(0, 4);
   return (
-    <div className="group grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] rounded-lg border bg-card overflow-hidden cursor-pointer hover:border-foreground/40 transition-colors" onClick={() => onOpen(p)} data-testid="large-card">
+    <div className="group grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] rounded-lg border bg-card overflow-hidden cursor-pointer hover:border-foreground/40 transition-colors" onClick={() => onOpen(p)} data-testid="showcase-card">
       <div className="relative bg-muted">
         <img loading="lazy" src={p.images[0] ? p.images[0].src.replace(/(\.[a-z]+)(\?|$)/i, '_1200x$1$2') : ''} alt="" className="w-full aspect-[4/3] object-cover" />
         {pics.length > 1 && <div className="absolute bottom-2 left-2 flex gap-1">{pics.slice(1).map(im => <img key={im.id} loading="lazy" src={thumb(im.src)} alt="" className="w-14 h-10 object-cover rounded border border-white/70 shadow" />)}</div>}
@@ -102,8 +102,8 @@ function LargeCard({ p, config, onOpen }: { p: Item; config: CatConfig | null; o
   );
 }
 
-export function Grid({ items, config, view, onOpen }: { items: Item[]; config: CatConfig | null; view: 'grid' | 'large'; onOpen: (p: Item) => void }) {
-  const page = view === 'large' ? 30 : PAGE;
+export function Grid({ items, config, view, onOpen }: { items: Item[]; config: CatConfig | null; view: 'grid' | 'showcase'; onOpen: (p: Item) => void }) {
+  const page = view === 'showcase' ? 30 : PAGE;
   const [shown, setShown] = useState(page);
   const [prev, setPrev] = useState({ items, view });
   if (prev.items !== items || prev.view !== view) { setPrev({ items, view }); setShown(page); }   // reset paging when results or view change
@@ -116,8 +116,8 @@ export function Grid({ items, config, view, onOpen }: { items: Item[]; config: C
   }, [shown, items, page]);
   return (
     <>
-      {view === 'large'
-        ? <div className="flex flex-col gap-3 max-w-[1100px]">{items.slice(0, shown).map(p => <LargeCard key={p.id} p={p} config={config} onOpen={onOpen} />)}</div>
+      {view === 'showcase'
+        ? <div className="flex flex-col gap-3 max-w-[1100px]">{items.slice(0, shown).map(p => <ShowcaseCard key={p.id} p={p} config={config} onOpen={onOpen} />)}</div>
         : <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(150px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(210px,1fr))]">{items.slice(0, shown).map(p => <Card key={p.id} p={p} config={config} onOpen={onOpen} />)}</div>}
       {shown < items.length && <div ref={sentinel} className="text-center text-xs text-muted-foreground p-6">loading {Math.min(page, items.length - shown)} more of {items.length - shown}…</div>}
     </>

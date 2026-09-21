@@ -42,7 +42,7 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
         <a href={BASE} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">njs-export.com <ExternalLink className="size-3" /></a>
         <span className="hidden sm:inline text-[11px] text-muted-foreground">unofficial · read-only · every listing links to the shop</span>
         <Tooltip><TooltipTrigger asChild>
-          <Button size="icon-sm" variant="ghost" className="ml-auto" onClick={theme.toggle} aria-label="toggle dark mode">{theme.resolved === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>
+          <Button size="icon-sm" variant="ghost" className="ml-auto" onClick={theme.toggle} aria-label="toggle dark mode" title={theme.resolved === 'dark' ? 'switch to light mode' : 'switch to dark mode'}>{theme.resolved === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>
         </TooltipTrigger><TooltipContent>{theme.resolved === 'dark' ? 'light mode' : 'dark mode'}</TooltipContent></Tooltip>
       </div>
       <div className="flex gap-1.5 px-4 pt-2 overflow-x-auto [scrollbar-width:none]">
@@ -70,9 +70,8 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
           <Star className={cn('size-4', state.favs && 'fill-current')} /><span className="hidden sm:inline">favs</span>{favCount ? ` (${favCount})` : ''}
         </Button>
         <ToggleGroup type="single" variant="outline" size="sm" value={state.view} onValueChange={v => v && update({ view: v as UIState['view'] })} aria-label="view">
-          <ToggleGroupItem value="grid" aria-label="grid"><LayoutGrid className="size-4" /></ToggleGroupItem>
-          <ToggleGroupItem value="large" aria-label="large cards"><Rows3 className="size-4" /></ToggleGroupItem>
-          <ToggleGroupItem value="table" aria-label="table"><Table2 className="size-4" /></ToggleGroupItem>
+          {([['grid', 'Grid: compact cards', LayoutGrid], ['showcase', 'Showcase: one big card per row with photos and specs', Rows3], ['table', 'Table: sortable columns for comparing', Table2]] as const).map(([v, tip, Icon]) =>
+            <Tooltip key={v}><TooltipTrigger asChild><ToggleGroupItem value={v} aria-label={tip} title={tip}><Icon className="size-4" /></ToggleGroupItem></TooltipTrigger><TooltipContent>{tip}</TooltipContent></Tooltip>)}
         </ToggleGroup>
         <SavedViews state={state} apply={s => update(s)} />
         <span className="text-muted-foreground tabular-nums" data-testid="count">{state.favs ? `${resultCount} favourites` : `${resultCount} of ${catCount}`}</span>
