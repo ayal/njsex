@@ -1,36 +1,67 @@
 // Keeps the whole UI state in the URL hash so any view is bookmarkable/shareable.
+//   #cat=frames&sort=seat_tube_cm_asc&f={"builder":["Makino"]}&p=makino-silver-52cm
+// `p` is the open product's handle. Opening a product pushes a history entry so Back closes it.
 import { useCallback, useEffect, useState } from 'react';
 import type { FacetState } from './facets';
 
 export interface UIState {
   cat: string; view: 'grid' | 'table'; sort: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState;
+  /** handle of the product open in the detail panel */
+  open: string | null;
 }
-export const DEFAULT_STATE: UIState = { cat: 'frames', view: 'grid', sort: 'created_desc', q: '', avail: 'in', facets: {} };
+export const DEFAULT_STATE: UIState = { cat: 'frames', view: 'grid', sort: 'created_desc', q: '', avail: 'in', facets: {}, open: null };
 
 function read(): UIState {
+  const raw = location.hash.slice(1);
+  if (!raw) return DEFAULT_STATE;
   try {
-    const raw = location.hash.slice(1);
-    if (!raw) return DEFAULT_STATE;
-    const o = JSON.parse(decodeURIComponent(raw));
-    const avail = o.avail === true ? 'in' : (['all', 'in', 'sold'].includes(o.avail) ? o.avail : 'in');   // old hashes stored a boolean
-    return { ...DEFAULT_STATE, ...o, avail, facets: o.facets ?? {} };
+    if (raw.startsWith('%7B') || raw.startsWith('{')) {          // legacy JSON hash from earlier versions
+      const o = JSON.parse(decodeURIComponent(raw));
+      return { ...DEFAULT_STATE, ...o, avail: o.avail === true ? 'in' : o.avail ?? 'in', facets: o.facets ?? {}, open: null };
+    }
+    const q = new URLSearchParams(raw);
+    const s: UIState = { ...DEFAULT_STATE, facets: {} };
+    if (q.has('cat')) s.cat = q.get('cat')!;
+    if (q.get('view') === 'table') s.view = 'table';
+    if (q.has('sort')) s.sort = q.get('sort')!;
+    if (q.has('q')) s.q = q.get('q')!;
+    const a = q.get('avail'); if (a === 'all' || a === 'sold') s.avail = a;
+    if (q.has('f')) { try { s.facets = JSON.parse(q.get('f')!); } catch { /* ignore bad facets */ } }
+    if (q.has('p')) s.open = q.get('p');
+    return s;
   } catch { return DEFAULT_STATE; }
 }
-function write(s: UIState) {
-  const o: Partial<UIState> = { cat: s.cat, view: s.view, sort: s.sort, facets: s.facets };
-  if (s.q) o.q = s.q; if (s.avail !== 'in') o.avail = s.avail;
-  history.replaceState(null, '', '#' + encodeURIComponent(JSON.stringify(o)));
+
+function serialize(s: UIState): string {
+  const q = new URLSearchParams();
+  q.set('cat', s.cat);
+  if (s.view !== 'grid') q.set('view', s.view);
+  if (s.sort !== 'created_desc') q.set('sort', s.sort);
+  if (s.q) q.set('q', s.q);
+  if (s.avail !== 'in') q.set('avail', s.avail);
+  if (Object.keys(s.facets).length) q.set('f', JSON.stringify(s.facets));
+  if (s.open) q.set('p', s.open);
+  // keep the facet JSON readable in the address bar
+  return '#' + q.toString().replace(/%7B/gi, '{').replace(/%7D/gi, '}').replace(/%22/g, '"').replace(/%3A/gi, ':').replace(/%2C/gi, ',').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
 }
 
 export function useHashState() {
   const [state, setState] = useState<UIState>(read);
-  useEffect(() => { write(state); }, [state]);
+  const [pushNext, setPushNext] = useState(false);
   useEffect(() => {
-    const onHash = () => setState(read());
+    const h = serialize(state);
+    if (h === location.hash) return;
+    if (pushNext) { history.pushState(null, '', h); setPushNext(false); } else history.replaceState(null, '', h);
+  }, [state, pushNext]);
+  useEffect(() => {
+    const onHash = () => setState(read());          // Back/Forward and hand-edited URLs
     window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
+    window.addEventListener('popstate', onHash);
+    return () => { window.removeEventListener('hashchange', onHash); window.removeEventListener('popstate', onHash); };
   }, []);
-  const update = useCallback((patch: Partial<UIState> | ((s: UIState) => Partial<UIState>)) =>
-    setState(s => ({ ...s, ...(typeof patch === 'function' ? patch(s) : patch) })), []);
+  const update = useCallback((patch: Partial<UIState> | ((s: UIState) => Partial<UIState>), opts?: { push?: boolean }) => {
+    if (opts?.push) setPushNext(true);
+    setState(s => ({ ...s, ...(typeof patch === 'function' ? patch(s) : patch) }));
+  }, []);
   return [state, update] as const;
 }

@@ -25,7 +25,7 @@ export function SavedViews({ state, apply }: { state: UIState; apply: (s: UIStat
   }, [open]);
   const save = () => {
     const n = name.trim() || summary(state);
-    const next = [{ name: n, state, savedAt: new Date().toISOString() }, ...views.filter(v => v.name !== n)];   // same name overwrites
+    const next = [{ name: n, state: { ...state, open: null }, savedAt: new Date().toISOString() }, ...views.filter(v => v.name !== n)];   // same name overwrites
     setViews(next); store(next); setName('');
   };
   const remove = (n: string) => { const next = views.filter(v => v.name !== n); setViews(next); store(next); };

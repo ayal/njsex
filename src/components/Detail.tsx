@@ -15,7 +15,7 @@ export function Detail({ p, catalog, onClose }: Props) {
       <div className="panel">
         <span className="close" onClick={onClose}>✕</span>
         <h2>{p.title}</h2>
-        <div className="sub"><Price p={p} /> · {p.product_type} · {colls} · listed {p.created_at.slice(0, 10)} · updated {p.updated_at.slice(0, 10)} · <a href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">open on njs-export.com ↗</a></div>
+        <div className="sub"><Price p={p} /> · {p.product_type} · {colls} · listed {p.created_at.slice(0, 10)} · updated {p.updated_at.slice(0, 10)} · <a href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">open on njs-export.com ↗</a> · <a href={location.href} onClick={e => { e.preventDefault(); navigator.clipboard?.writeText(location.href); (e.currentTarget as HTMLElement).textContent = 'link copied'; }}>copy link to this view</a></div>
         <Gallery images={p.images} title={p.title} />
         <div className="cols">
           <div>{p.specs ? (p.isFrame ? <FrameSpecTables s={p.specs as Specs} /> : <GenericSpecTable s={p.specs} />) : p.primaryCat && <div className="hint">specs not parsed yet</div>}</div>

@@ -13,7 +13,6 @@ export default function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [state, update] = useHashState();
-  const [open, setOpen] = useState<Item | null>(null);
 
   useEffect(() => { loadCatalog().then(setCatalog, e => setError(String(e))); }, []);
 
@@ -27,6 +26,13 @@ export default function App() {
     return filterItems(catalog.items, query, defs).sort(cmp);
   }, [catalog, query, defs, state.sort]);
 
+  // the open product lives in the URL (`p=handle`); opening pushes history so Back closes the panel
+  const byHandle = useMemo(() => new Map(catalog?.items.map(p => [p.handle, p]) ?? []), [catalog]);
+  const open: Item | null = state.open ? byHandle.get(state.open) ?? null : null;
+  const setOpen = (p: Item | null) => {
+    if (p) update({ open: p.handle }, { push: true });
+    else update({ open: null });
+  };
   if (error) return <div className="loading">failed to load data: {error}</div>;
   if (!catalog) return <div className="loading">loading catalog…</div>;
   const pending = config ? catItems.length - (catalog.specsCount[state.cat] ?? 0) : 0;

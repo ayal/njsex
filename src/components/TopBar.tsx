@@ -26,7 +26,7 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, up
     <div className="top" ref={ref}>
       <div className="cats">
         {cats.map(c => <button key={c.handle} className={c.handle === state.cat ? 'on' : ''}
-          onClick={() => update({ cat: c.handle, facets: {}, sort: SORTS[state.sort] ? state.sort : 'created_desc' })}>
+          onClick={() => update({ cat: c.handle, facets: {}, open: null, sort: SORTS[state.sort] ? state.sort : 'created_desc' })}>
           {c.title}<small>{c.n}</small></button>)}
       </div>
       <div className="bar">
