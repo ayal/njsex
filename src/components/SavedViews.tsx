@@ -32,7 +32,7 @@ export function SavedViews({ state, apply }: { state: UIState; apply: (s: UIStat
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button size="sm" variant="outline" className="h-9" data-testid="saved-btn"><Bookmark className="size-4" />saved views{views.length ? ` (${views.length})` : ''}</Button>
+        <Button size="sm" variant="outline" className="h-9" data-testid="saved-btn" title="saved views"><Bookmark className="size-4" /><span className="hidden sm:inline">saved views</span>{views.length ? ` (${views.length})` : ''}</Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[380px] p-2">
         <div className="flex gap-1.5 pb-2">

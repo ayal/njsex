@@ -27,7 +27,7 @@ export function Table({ items, cols, onOpen }: { items: Item[]; cols: Col[] | nu
   return (
     <div className="rounded-md border bg-card overflow-x-auto" data-testid="table">
       <T className="text-xs">
-        <TableHeader className="sticky top-[var(--topH)] bg-card z-10">
+        <TableHeader className="sticky top-0 md:top-[var(--topH)] bg-card z-10">
           <TableRow><TableHead className="w-14" />{columns.map(c => <TableHead key={c.key} className={cn('cursor-pointer select-none whitespace-nowrap h-8', sort?.key === c.key && 'text-primary')} onClick={() => click(c.key)}>
             {c.label}{sort && sort.key === c.key ? (sort.dir === 1 ? ' ↑' : ' ↓') : ''}</TableHead>)}</TableRow>
         </TableHeader>

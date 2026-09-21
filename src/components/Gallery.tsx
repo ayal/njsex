@@ -42,7 +42,7 @@ export function Gallery({ images, title }: { images: Image[]; title: string }) {
   return (
     <div className="gallery my-1" data-testid="gallery">
       {/* fixed box: photos letterbox inside, nothing below moves */}
-      <div className="relative h-[min(60vh,560px)] rounded-md bg-neutral-900 overflow-hidden cursor-zoom-in" onClick={() => setLightbox(true)} title="click to view full size" data-testid="g-main">
+      <div className="relative h-[min(45vh,560px)] sm:h-[min(60vh,560px)] rounded-md bg-neutral-900 overflow-hidden cursor-zoom-in" onClick={() => setLightbox(true)} title="click to view full size" data-testid="g-main">
         <img src={src} alt={title} className={`size-full object-contain block ${loading ? 'blur-[0.4px]' : ''}`} />
         {loading && <span className="absolute left-2.5 bottom-2"><LoadingPill text="loading" /></span>}
         {n > 1 && <>

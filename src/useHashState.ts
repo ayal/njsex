@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { FacetState } from './facets';
 
 export interface UIState {
-  cat: string; view: 'grid' | 'table'; sort: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState;
+  cat: string; view: 'grid' | 'large' | 'table'; sort: string; q: string; avail: 'all' | 'in' | 'sold'; facets: FacetState;
   /** handle of the product open in the detail panel */
   open: string | null;
   /** show only favourites */
@@ -23,8 +23,8 @@ function read(): UIState {
     }
     const q = new URLSearchParams(raw);
     const s: UIState = { ...DEFAULT_STATE, facets: {} };
-    if (q.has('cat')) s.cat = q.get('cat')!;
-    if (q.get('view') === 'table') s.view = 'table';
+    if (q.get('cat')) s.cat = q.get('cat')!;   // no 'All' category any more; empty falls back to frames
+    const v = q.get('view'); if (v === 'table' || v === 'large') s.view = v;
     if (q.has('sort')) s.sort = q.get('sort')!;
     if (q.has('q')) s.q = q.get('q')!;
     const a = q.get('avail'); if (a === 'all' || a === 'sold') s.avail = a;

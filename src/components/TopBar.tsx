@@ -1,21 +1,26 @@
 import { useEffect, useRef } from 'react';
-import { Search, Star, X } from 'lucide-react';
+import { ExternalLink, LayoutGrid, Moon, Rows3, Search, SlidersHorizontal, Star, Sun, Table2, X } from 'lucide-react';
 import type { Catalog } from '../data';
-import { FRAME_DUPES } from '../data';
+import { BASE, FRAME_DUPES } from '../data';
 import { FLAG_LABEL, type CatConfig } from '../categories';
 import { SORTS, type FacetDef, type FacetState, type RangeState } from '../facets';
 import type { UIState } from '../useHashState';
+import { useTheme } from '../theme';
 import { SavedViews } from './SavedViews';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-interface Props { catalog: Catalog; config: CatConfig | null; defs: Map<string, FacetDef>; state: UIState; resultCount: number; catCount: number; favCount: number; update: (p: Partial<UIState>) => void; }
+interface Props {
+  catalog: Catalog; config: CatConfig | null; defs: Map<string, FacetDef>; state: UIState; resultCount: number; catCount: number; favCount: number;
+  update: (p: Partial<UIState>) => void; onFilters?: () => void;   // onFilters: open the mobile filter drawer
+}
 
-export function TopBar({ catalog, config, defs, state, resultCount, catCount, favCount, update }: Props) {
+export function TopBar({ catalog, config, defs, state, resultCount, catCount, favCount, update, onFilters }: Props) {
   // keep --topH in sync with the bar's real height so sticky sidebar/table headers sit right under it
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -23,25 +28,36 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
     const sync = () => document.documentElement.style.setProperty('--topH', el.offsetHeight + 'px');
     sync(); const ro = new ResizeObserver(sync); ro.observe(el); return () => ro.disconnect();
   }, []);
-  const cats = [{ handle: '', title: 'All', n: catalog.items.length }].concat(
-    catalog.collections.filter(c => !FRAME_DUPES.has(c.handle) && catalog.membership[c.handle]?.length)
-      .map(c => ({ handle: c.handle, title: c.title, n: catalog.membership[c.handle].length }))
-      .sort((a, b) => b.n - a.n));
+  const theme = useTheme();
+  const cats = catalog.collections.filter(c => !FRAME_DUPES.has(c.handle) && catalog.membership[c.handle]?.length)
+    .map(c => ({ handle: c.handle, title: c.title, n: catalog.membership[c.handle].length }))
+    .sort((a, b) => b.n - a.n);
   const specSorts = (config?.sorts ?? []).flatMap(s => [[`${s.key}_asc`, `${s.label} ↑`], [`${s.key}_desc`, `${s.label} ↓`]]);
+  const nFacets = Object.keys(state.facets).length;
   return (
-    <div className="sticky top-0 z-20 bg-card border-b" ref={ref}>
+    <div className="md:sticky top-0 z-20 bg-card border-b" ref={ref}>   {/* on phones the bar scrolls away: 200px of sticky chrome is too much */}
+      {/* header: brand + link to the shop + theme */}
+      <div className="flex items-center gap-3 px-4 pt-2">
+        <span className="font-semibold tracking-tight">NJS Export <span className="text-muted-foreground font-normal">browser</span></span>
+        <a href={BASE} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">njs-export.com <ExternalLink className="size-3" /></a>
+        <span className="hidden sm:inline text-[11px] text-muted-foreground">unofficial · read-only · every listing links to the shop</span>
+        <Tooltip><TooltipTrigger asChild>
+          <Button size="icon-sm" variant="ghost" className="ml-auto" onClick={theme.toggle} aria-label="toggle dark mode">{theme.resolved === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>
+        </TooltipTrigger><TooltipContent>{theme.resolved === 'dark' ? 'light mode' : 'dark mode'}</TooltipContent></Tooltip>
+      </div>
       <div className="flex gap-1.5 px-4 pt-2 overflow-x-auto [scrollbar-width:none]">
-        {cats.map(c => <Button key={c.handle} size="sm" variant={c.handle === state.cat ? 'default' : 'outline'} className="rounded-full h-7 shrink-0"
-          onClick={() => update({ cat: c.handle, facets: {}, open: null, sort: SORTS[state.sort] ? state.sort : 'created_desc' })}>
+        {cats.map(c => <Button key={c.handle} size="sm" variant={c.handle === state.cat && !state.favs ? 'default' : 'outline'} className="rounded-full h-7 shrink-0"
+          onClick={() => update({ cat: c.handle, facets: {}, open: null, favs: false, sort: SORTS[state.sort] ? state.sort : 'created_desc' })}>
           {c.title}<span className="opacity-60 text-xs">{c.n}</span></Button>)}
       </div>
       <div className="flex flex-wrap items-center gap-2 px-4 py-2">
-        <div className="relative flex-1 min-w-[220px]">
+        {onFilters && config && !state.favs && <Button size="sm" variant="outline" className="h-9 md:hidden" onClick={onFilters}><SlidersHorizontal className="size-4" />filters{nFacets ? ` (${nFacets})` : ''}</Button>}
+        <div className="relative flex-1 min-w-[160px]">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input className="pl-8 h-9" placeholder="search title, description, tags" value={state.q} onChange={e => update({ q: e.target.value })} />
+          <Input className="pl-8 h-9" placeholder="search" value={state.q} onChange={e => update({ q: e.target.value })} />
         </div>
         <Select value={state.sort} onValueChange={v => update({ sort: v })}>
-          <SelectTrigger className="w-[190px] h-9"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-[160px] sm:w-[190px] h-9"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectGroup>{Object.entries(SORTS).map(([k, s]) => <SelectItem key={k} value={k}>{s.label}</SelectItem>)}</SelectGroup>
             {specSorts.length > 0 && <SelectGroup><SelectLabel>by spec</SelectLabel>{specSorts.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectGroup>}
@@ -50,14 +66,16 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
         <ToggleGroup type="single" variant="outline" size="sm" value={state.favs ? '' : state.avail} disabled={state.favs} onValueChange={v => v && update({ avail: v as UIState['avail'] })}>
           <ToggleGroupItem value="all">all</ToggleGroupItem><ToggleGroupItem value="in">in stock</ToggleGroupItem><ToggleGroupItem value="sold">sold out</ToggleGroupItem>
         </ToggleGroup>
-        <Button size="sm" variant={state.favs ? 'default' : 'outline'} className={cn('h-9', state.favs && 'bg-amber-500 hover:bg-amber-500/90 border-amber-500')} title="show only favourites" onClick={() => update({ favs: !state.favs })}>
-          <Star className={cn('size-4', state.favs && 'fill-current')} />favs{favCount ? ` (${favCount})` : ''}
+        <Button size="sm" variant={state.favs ? 'default' : 'outline'} className={cn('h-9', state.favs && 'bg-amber-500 hover:bg-amber-500/90 border-amber-500 text-white')} title="show favourites from every category" onClick={() => update({ favs: !state.favs, open: null })}>
+          <Star className={cn('size-4', state.favs && 'fill-current')} /><span className="hidden sm:inline">favs</span>{favCount ? ` (${favCount})` : ''}
         </Button>
-        <ToggleGroup type="single" variant="outline" size="sm" value={state.view} onValueChange={v => v && update({ view: v as UIState['view'] })}>
-          <ToggleGroupItem value="grid">grid</ToggleGroupItem><ToggleGroupItem value="table">table</ToggleGroupItem>
+        <ToggleGroup type="single" variant="outline" size="sm" value={state.view} onValueChange={v => v && update({ view: v as UIState['view'] })} aria-label="view">
+          <ToggleGroupItem value="grid" aria-label="grid"><LayoutGrid className="size-4" /></ToggleGroupItem>
+          <ToggleGroupItem value="large" aria-label="large cards"><Rows3 className="size-4" /></ToggleGroupItem>
+          <ToggleGroupItem value="table" aria-label="table"><Table2 className="size-4" /></ToggleGroupItem>
         </ToggleGroup>
         <SavedViews state={state} apply={s => update(s)} />
-        <span className="text-muted-foreground tabular-nums" data-testid="count">{resultCount} of {catCount}</span>
+        <span className="text-muted-foreground tabular-nums" data-testid="count">{state.favs ? `${resultCount} favourites` : `${resultCount} of ${catCount}`}</span>
       </div>
       <Chips facets={state.facets} defs={defs} onChange={facets => update({ facets })} />
     </div>

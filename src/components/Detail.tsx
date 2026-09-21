@@ -15,17 +15,18 @@ export function Detail({ p, catalog, onClose }: Props) {
   const colls = catalog.collections.filter(c => p.colls.includes(c.handle) && !FRAME_DUPES.has(c.handle)).map(c => c.title).join(', ');
   return (
     <Dialog open onOpenChange={o => { if (!o && !document.querySelector('[data-lightbox]')) onClose(); }}>
-      <DialogContent className="sm:max-w-[1000px] w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto p-6 gap-3 detail" data-testid="detail">
+      <DialogContent className="sm:max-w-[1000px] w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-h-[calc(100vh-1rem)] overflow-y-auto overflow-x-hidden p-4 sm:p-6 gap-3 detail [&_*]:min-w-0 break-words [overflow-wrap:anywhere]" data-testid="detail">
         <DialogHeader className="text-left space-y-1">
           <DialogTitle className="text-lg leading-snug flex items-start gap-1.5"><Star id={p.id} className="text-[22px] -mt-0.5 shrink-0" />{p.title}</DialogTitle>
           <DialogDescription className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
             <Price p={p} /> · {p.product_type} · {colls} · listed {p.created_at.slice(0, 10)} · updated {p.updated_at.slice(0, 10)}
-            <a className="text-primary hover:underline inline-flex items-center gap-1" href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">open on njs-export.com <ExternalLink className="size-3" /></a>
             <Button variant="link" size="xs" className="h-auto p-0 text-xs" onClick={e => { navigator.clipboard?.writeText(location.href); (e.currentTarget as HTMLElement).textContent = 'link copied'; }}><LinkIcon className="size-3" />copy link to this view</Button>
           </DialogDescription>
         </DialogHeader>
+        {/* the one call to action: this site sells nothing, the shop does */}
+        <Button asChild className="w-full sm:w-auto sm:self-start" data-testid="shop-cta"><a href={`${BASE}/products/${p.handle}`} target="_blank" rel="noreferrer">View / buy on njs-export.com <ExternalLink className="size-4" /></a></Button>
         <Gallery images={p.images} title={p.title} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 min-w-0">
           <div>{p.specs ? (p.isFrame ? <FrameSpecTables s={p.specs as Specs} /> : <GenericSpecTable s={p.specs} />) : p.primaryCat && <div className="text-xs text-muted-foreground">specs not parsed yet</div>}</div>
           <div>
             <H>Seller description</H>

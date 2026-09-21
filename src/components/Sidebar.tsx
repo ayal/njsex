@@ -25,7 +25,7 @@ export function Sidebar({ groups, defs, items, catItems, query, onChange }: Prop
     onChange(f);
   };
   return (
-    <aside className="w-[270px] shrink-0 sticky top-[var(--topH)] max-h-[calc(100vh-var(--topH))] overflow-y-auto pl-4 pr-3 py-3 space-y-2.5 max-md:static max-md:w-full max-md:max-h-none" data-testid="sidebar">
+    <aside className="w-[270px] shrink-0 sticky top-[var(--topH)] max-h-[calc(100vh-var(--topH))] overflow-y-auto pl-4 pr-3 py-3 space-y-2.5" data-testid="sidebar">
       {groups.map(g => <FacetGroupBox key={g.title} title={g.title}>
         {g.items.map(def => {
           // pool = items matching every OTHER filter, so counts show what selecting this option would leave
