@@ -9,6 +9,7 @@ import { Sidebar } from './components/Sidebar';
 import { Grid } from './components/Cards';
 import { Table } from './components/Table';
 import { Detail } from './components/Detail';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -31,30 +32,28 @@ export default function App() {
   // the open product lives in the URL (`p=handle`); opening pushes history so Back closes the panel
   const byHandle = useMemo(() => new Map(catalog?.items.map(p => [p.handle, p]) ?? []), [catalog]);
   const open: Item | null = state.open ? byHandle.get(state.open) ?? null : null;
-  const setOpen = (p: Item | null) => {
-    if (p) update({ open: p.handle }, { push: true });
-    else update({ open: null });
-  };
-  if (error) return <div className="loading">failed to load data: {error}</div>;
-  if (!catalog) return <div className="loading">loading catalog…</div>;
+  const setOpen = (p: Item | null) => { if (p) update({ open: p.handle }, { push: true }); else update({ open: null }); };
+
+  if (error) return <div className="p-10 text-center text-muted-foreground">failed to load data: {error}</div>;
+  if (!catalog) return <div className="p-10 text-center text-muted-foreground">loading catalog…</div>;
   const pending = config ? catItems.length - (catalog.specsCount[state.cat] ?? 0) : 0;
   return (
-    <>
+    <TooltipProvider>
       <TopBar catalog={catalog} config={config} defs={defs} state={state} resultCount={result.length} catCount={catItems.length} favCount={favs.size} update={update} />
-      {state.favs && result.length === 0 && <div className="loading">no favourites {state.cat ? 'in this category' : ''} yet — click ☆ on any card to save it</div>}
-      <div className="main">
+      {state.favs && result.length === 0 && <div className="p-10 text-center text-muted-foreground">no favourites {state.cat ? 'in this category' : ''} yet — click ☆ on any card to save it</div>}
+      <div className="flex items-start max-md:flex-col">
         {config && <Sidebar groups={config.facets} defs={defs} items={catalog.items} catItems={catItems} query={query} onChange={facets => update({ facets })} />}
-        <div className="content">
-          {pending > 0 && <div className="notice">{pending} of {catItems.length} items in this category still waiting for parsed specs, reload later to pick them up.</div>}
+        <div className="flex-1 min-w-0 px-4 py-3 pb-10">
+          {pending > 0 && <div className="mb-2.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 px-2.5 py-1.5 text-xs dark:bg-amber-950 dark:text-amber-100 dark:border-amber-800">{pending} of {catItems.length} items in this category still waiting for parsed specs, reload later to pick them up.</div>}
           {state.view === 'table' ? <Table items={result} cols={config?.cols ?? null} onOpen={setOpen} /> : <Grid items={result} config={config} onOpen={setOpen} />}
         </div>
       </div>
       {open && <Detail p={open} catalog={catalog} onClose={() => setOpen(null)} />}
-      <footer className="foot">
-        Unofficial read-only browser of the public <a href="https://www.njs-export.com" target="_blank" rel="noreferrer">njs-export.com</a> catalog. Not affiliated with NJS Export.
+      <footer className="mt-6 border-t px-4 py-6 pb-10 text-xs text-muted-foreground leading-relaxed">
+        Unofficial read-only browser of the public <a className="text-primary hover:underline" href="https://www.njs-export.com" target="_blank" rel="noreferrer">njs-export.com</a> catalog. Not affiliated with NJS Export.
         All listings, photos and prices are theirs; every item links to the original page, nothing is sold here.
         {catalog.meta && <> Data as of {catalog.meta.generated_at.slice(0, 16).replace('T', ' ')} · {catalog.meta.live} listings, {catalog.meta.in_stock} in stock.</>}
       </footer>
-    </>
+    </TooltipProvider>
   );
 }

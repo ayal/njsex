@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Image } from '../data';
 
 /** Shopify CDN resizer: insert _WIDTHx before the extension. */
@@ -26,7 +27,7 @@ function useProgressive(low: string, high: string) {
   return { src, loading };
 }
 
-const LoadingPill = ({ text }: { text: string }) => <span className="img-loading"><span className="spin" />{text}</span>;
+const LoadingPill = ({ text }: { text: string }) => <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 text-white text-[11px] px-2 py-0.5 pointer-events-none"><span className="size-2.5 rounded-full border-2 border-white/40 border-t-white animate-spin" />{text}</span>;
 
 /** Detail-panel gallery: one large image + thumbnail strip; click the large image for the lightbox. */
 export function Gallery({ images, title }: { images: Image[]; title: string }) {
@@ -39,23 +40,28 @@ export function Gallery({ images, title }: { images: Image[]; title: string }) {
   useEffect(() => { if (!n) return; for (const d of [1, -1]) decode(sized(images[(i + d + n) % n].src, 1600)); decode(sized(cur.src, 2048)); }, [i, images, n, cur]);
   if (!n) return null;
   return (
-    <div className="gallery">
-      <div className="g-main" onClick={() => setLightbox(true)} title="click to view full size">
-        <img src={src} alt={title} className={loading ? 'soft' : ''} />
-        {loading && <LoadingPill text="loading" />}
+    <div className="gallery my-1" data-testid="gallery">
+      {/* fixed box: photos letterbox inside, nothing below moves */}
+      <div className="relative h-[min(60vh,560px)] rounded-md bg-neutral-900 overflow-hidden cursor-zoom-in" onClick={() => setLightbox(true)} title="click to view full size" data-testid="g-main">
+        <img src={src} alt={title} className={`size-full object-contain block ${loading ? 'blur-[0.4px]' : ''}`} />
+        {loading && <span className="absolute left-2.5 bottom-2"><LoadingPill text="loading" /></span>}
         {n > 1 && <>
-          <button className="g-nav prev" onClick={e => { e.stopPropagation(); setI((i - 1 + n) % n); }}>‹</button>
-          <button className="g-nav next" onClick={e => { e.stopPropagation(); setI((i + 1) % n); }}>›</button>
+          <button className={NAV + ' left-2'} onClick={e => { e.stopPropagation(); setI((i - 1 + n) % n); }}>‹</button>
+          <button className={NAV + ' right-2'} onClick={e => { e.stopPropagation(); setI((i + 1) % n); }} data-testid="g-next">›</button>
         </>}
-        <span className="g-count">{i + 1} / {n} · click to zoom</span>
+        <span className="absolute bottom-2 right-2.5 rounded-full bg-black/60 text-white text-[11px] px-2 py-0.5">{i + 1} / {n} · click to zoom</span>
       </div>
-      {n > 1 && <div className="g-strip">
-        {images.map((im, k) => <img key={im.id} src={sized(im.src, 200)} className={k === i ? 'on' : ''} onClick={() => setI(k)} alt="" loading="lazy" />)}
+      {n > 1 && <div className="flex gap-1.5 overflow-x-auto h-[70px] pt-2 pb-1">
+        {images.map((im, k) => <img key={im.id} src={sized(im.src, 200)} className={THUMB + (k === i ? ' opacity-100 border-primary' : '')} onClick={() => setI(k)} alt="" loading="lazy" />)}
       </div>}
-      {lightbox && <Lightbox images={images} index={i} onIndex={setI} onClose={() => setLightbox(false)} />}
+      {/* portal: the dialog is centred with a transform, which would otherwise trap a fixed-position lightbox inside it */}
+      {lightbox && createPortal(<Lightbox images={images} index={i} onIndex={setI} onClose={() => setLightbox(false)} />, document.body)}
     </div>
   );
 }
+
+const NAV = 'absolute top-1/2 -translate-y-1/2 rounded bg-black/50 hover:bg-black/75 text-white text-[34px] leading-none px-3 pt-1.5 pb-2.5 cursor-pointer';
+const THUMB = 'w-[72px] h-[54px] object-cover rounded-sm cursor-pointer opacity-55 hover:opacity-100 border-2 border-transparent shrink-0';
 
 type Zoom = 0 | 1 | 2;   // fit to screen, actual pixels, 200%
 
@@ -103,23 +109,23 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
   const up = () => { drag.current = null; };
 
   return (
-    <div className="lb" onClick={onClose}>
-      <div className="lb-top" onClick={e => e.stopPropagation()}>
-        <span>{index + 1} / {n}</span>
-        <span className="lb-hint">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
-        <span className="lb-pill-slot">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
-        <a href={img.src} target="_blank" rel="noreferrer">open original ↗</a>
-        <button className="lb-x" onClick={onClose}>✕</button>
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/95 text-neutral-300 select-none" onClick={onClose} data-lightbox data-testid="lightbox">
+      <div className="flex items-center gap-4 px-4 py-2.5 text-[13px] bg-black" onClick={e => e.stopPropagation()}>
+        <span className="min-w-[52px] tabular-nums">{index + 1} / {n}</span>
+        <span className="text-neutral-500">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
+        <span className="inline-block min-w-[170px]">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
+        <a className="ml-auto text-sky-300 hover:underline" href={img.src} target="_blank" rel="noreferrer">open original ↗</a>
+        <button className="text-white text-[22px] leading-none px-1 cursor-pointer" onClick={onClose}>✕</button>
       </div>
-      <div ref={pane} className={`lb-pane z${zoom} ${drag.current ? 'dragging' : ''}`} onMouseDown={down} onMouseMove={move} onMouseUp={up} onMouseLeave={up} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-        <img src={src} alt="" onClick={onImgClick} draggable={false} className={loading ? 'soft' : ''}
-          style={zoom > 0 && zoomW ? { width: zoomW, height: zoomH, maxWidth: 'none' } : undefined} />
+      <div ref={pane} className={`flex-1 overflow-auto relative ${zoom === 0 ? 'flex items-center justify-center' : 'block'} ${zoom > 0 ? (drag.current ? 'cursor-grabbing' : 'cursor-grab') : ''}`} data-testid="lb-pane" onMouseDown={down} onMouseMove={move} onMouseUp={up} onMouseLeave={up} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+        <img src={src} alt="" onClick={onImgClick} draggable={false} className={`block ${zoom === 0 ? 'max-w-full max-h-full object-contain cursor-zoom-in' : zoom === 1 ? 'max-w-none cursor-zoom-in' : 'max-w-none cursor-zoom-out'} ${loading ? 'blur-[0.4px]' : ''}`}
+          style={zoom > 0 && zoomW ? { width: zoomW, height: zoomH } : undefined} />
       </div>
       {n > 1 && <>
-        <button className="lb-nav prev" onClick={e => { e.stopPropagation(); go(-1); }}>‹</button>
-        <button className="lb-nav next" onClick={e => { e.stopPropagation(); go(1); }}>›</button>
-        <div className="lb-strip" onClick={e => e.stopPropagation()}>
-          {images.map((im, k) => <img key={im.id} src={sized(im.src, 200)} className={k === index ? 'on' : ''} onClick={() => { onIndex(k); setZoom(0); }} alt="" />)}
+        <button className={NAV + ' left-3 text-[48px] px-4 pt-2 pb-3.5'} onClick={e => { e.stopPropagation(); go(-1); }}>‹</button>
+        <button className={NAV + ' right-3 text-[48px] px-4 pt-2 pb-3.5'} onClick={e => { e.stopPropagation(); go(1); }}>›</button>
+        <div className="flex gap-1.5 overflow-x-auto justify-center h-[74px] px-3 py-2 bg-black" onClick={e => e.stopPropagation()}>
+          {images.map((im, k) => <img key={im.id} src={sized(im.src, 200)} className={THUMB + (k === index ? ' opacity-100 border-primary' : '')} onClick={() => { onIndex(k); setZoom(0); }} alt="" />)}
         </div>
       </>}
     </div>

@@ -1,5 +1,6 @@
 // Favourite products, persisted in localStorage. Shared across the app through a tiny external store.
 import { useSyncExternalStore } from 'react';
+import { cn } from '@/lib/utils';
 
 const KEY = 'njsex.favs.v1';
 let favs: Set<number> = load();
@@ -18,6 +19,6 @@ export function useFavs(): Set<number> {
 
 export function Star({ id, className = '' }: { id: number; className?: string }) {
   const f = useFavs(); const on = f.has(id);
-  return <button className={`star ${on ? 'on' : ''} ${className}`} title={on ? 'remove from favourites' : 'add to favourites'}
-    onClick={e => { e.stopPropagation(); toggleFav(id); }}>{on ? '★' : '☆'}</button>;
+  return <button data-on={on} data-testid="star" className={cn('star leading-none cursor-pointer transition-colors', on ? 'text-amber-500' : 'text-muted-foreground hover:text-amber-500', className)}
+    title={on ? 'remove from favourites' : 'add to favourites'} onClick={e => { e.stopPropagation(); toggleFav(id); }}>{on ? '★' : '☆'}</button>;
 }

@@ -19,6 +19,11 @@ The structured fields (geometry, builder, condition grade and so on) are extract
 descriptions by a mix of pattern matching and a small language model. They are usually right, but always check the original
 listing before buying. Low-confidence values are marked in the detail view.
 
+## Stack
+
+React 19, Vite, TypeScript, Tailwind CSS v4, shadcn/ui (Radix primitives), lucide icons. No backend: the whole catalog
+is loaded into memory and filtered client-side.
+
 ## Running locally
 
     npm install
