@@ -40,7 +40,6 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
       <div className="flex items-center gap-3 px-4 pt-2">
         <span className="font-semibold tracking-tight">NJS Export <span className="text-muted-foreground font-normal">browser</span></span>
         <a href={BASE} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">njs-export.com <ExternalLink className="size-3" /></a>
-        <span className="hidden sm:inline text-[11px] text-muted-foreground">unofficial · read-only · every listing links to the shop</span>
         <Tooltip><TooltipTrigger asChild>
           <Button size="icon-sm" variant="ghost" className="ml-auto" onClick={theme.toggle} aria-label="toggle dark mode" title={theme.resolved === 'dark' ? 'switch to light mode' : 'switch to dark mode'}>{theme.resolved === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>
         </TooltipTrigger><TooltipContent>{theme.resolved === 'dark' ? 'light mode' : 'dark mode'}</TooltipContent></Tooltip>
