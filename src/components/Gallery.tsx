@@ -97,7 +97,8 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
     const el = pane.current; if (!el) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const fx = (e.clientX - rect.left) / rect.width, fy = (e.clientY - rect.top) / rect.height;
-    const next: Zoom = zoom === 0 ? 1 : zoom === 1 ? 2 : 0;
+    const touch = matchMedia('(pointer: coarse)').matches;
+    const next: Zoom = zoom === 0 ? 1 : (zoom === 1 && !touch) ? 2 : 0;
     setZoom(next);
     if (next > 0) {
       const w = (img.width ?? e.currentTarget.naturalWidth) * next, h = (img.height ?? e.currentTarget.naturalHeight) * next;
@@ -110,12 +111,14 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black/95 text-neutral-300 select-none [pointer-events:auto]" style={{ pointerEvents: 'auto' }} onClick={onClose} data-lightbox data-testid="lightbox">
-      <div className="flex items-center gap-4 px-4 py-2.5 text-[13px] bg-black" onClick={e => e.stopPropagation()}>
-        <span className="min-w-[52px] tabular-nums">{index + 1} / {n}</span>
-        <span className="text-neutral-500">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
-        <span className="inline-block min-w-[170px]">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
-        <a className="ml-auto text-sky-300 hover:underline" href={img.src} target="_blank" rel="noreferrer">open original ↗</a>
-        <button className="text-white text-[22px] leading-none px-3 py-1 -mr-2 cursor-pointer rounded hover:bg-white/10" onClick={onClose} aria-label="close" data-testid="lb-close">✕</button>
+      <div className="flex items-center gap-3 px-3 sm:px-4 py-2 text-[13px] bg-black flex-nowrap" onClick={e => e.stopPropagation()}>
+        <span className="tabular-nums shrink-0">{index + 1} / {n}</span>
+        {/* keyboard hints and the loading slot only make sense with a keyboard and room to spare */}
+        <span className="hidden md:inline text-neutral-500 truncate">{zoom === 0 ? 'click image or Z: actual pixels' : zoom === 1 ? '100% · click: 200% · drag to pan' : '200% · click: fit'} · ← → · Esc</span>
+        <span className="hidden md:inline-block min-w-[170px]">{loading && <LoadingPill text={zoom === 0 ? 'loading' : 'loading full resolution'} />}</span>
+        <span className="md:hidden text-neutral-500 truncate">{zoom === 0 ? 'tap photo to zoom' : 'drag to pan · tap to zoom out'}</span>
+        <a className="ml-auto text-sky-300 hover:underline shrink-0" href={img.src} target="_blank" rel="noreferrer" title="open original"><span className="hidden sm:inline">open original </span>↗</a>
+        <button className="shrink-0 inline-flex items-center gap-1 rounded-md border border-white/30 bg-white/10 hover:bg-white/20 text-white text-sm px-3 py-1.5 cursor-pointer" onClick={onClose} aria-label="close" data-testid="lb-close">✕ Close</button>
       </div>
       <div ref={pane} className={`flex-1 overflow-auto relative ${zoom === 0 ? 'flex items-center justify-center' : 'block'} ${zoom > 0 ? (drag.current ? 'cursor-grabbing' : 'cursor-grab') : ''}`} data-testid="lb-pane" onMouseDown={down} onMouseMove={move} onMouseUp={up} onMouseLeave={up} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
         <img src={src} alt="" onClick={onImgClick} draggable={false} className={`block ${zoom === 0 ? 'max-w-full max-h-full object-contain cursor-zoom-in' : zoom === 1 ? 'max-w-none cursor-zoom-in' : 'max-w-none cursor-zoom-out'} ${loading ? 'blur-[0.4px]' : ''}`}
