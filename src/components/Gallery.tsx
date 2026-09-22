@@ -110,7 +110,7 @@ export function Lightbox({ images, index, onIndex, onClose }: { images: Image[];
   const up = () => { drag.current = null; };
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-black/95 text-neutral-300 select-none [pointer-events:auto]" style={{ pointerEvents: 'auto' }} onClick={onClose} data-lightbox data-testid="lightbox">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-black text-neutral-300 select-none [pointer-events:auto]" style={{ pointerEvents: 'auto' }} onClick={onClose} data-lightbox data-testid="lightbox">
       <div className="flex items-center gap-3 px-3 sm:px-4 py-2 text-[13px] bg-black flex-nowrap" onClick={e => e.stopPropagation()}>
         <span className="tabular-nums shrink-0">{index + 1} / {n}</span>
         {/* keyboard hints and the loading slot only make sense with a keyboard and room to spare */}
