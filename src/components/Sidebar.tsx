@@ -38,12 +38,13 @@ export function Sidebar({ groups, defs, items, catItems, query, onChange }: Prop
     if (st == null) delete f[key]; else f[key] = st;
     onChange(f);
   };
+  const stockItems = useMemo(() => items.filter(p => p.avail), [items]);
   return (
     <aside ref={ref} className="w-[270px] shrink-0 sticky self-start pl-4 pr-3 py-3 space-y-2.5" style={{ top }} data-testid="sidebar">
       {groups.map(g => <FacetGroupBox key={g.title} title={g.title}>
         {g.items.map(def => {
           // pool = items matching every OTHER filter, so counts show what selecting this option would leave
-          const pool = filterItems(items, query, defs, def.key);
+          const pool = filterItems(stockItems, query, defs, def.key);
           const state = query.facets[def.key];
           const showLabel = g.items.length > 1 && (def.type === 'list' || def.type === 'swatch');
           switch (def.type) {

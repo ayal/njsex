@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { ExternalLink, LayoutGrid, Moon, Rows3, Search, SlidersHorizontal, Star, Sun, Table2, X } from 'lucide-react';
 import type { Catalog } from '../data';
 import { BASE, FRAME_DUPES } from '../data';
@@ -29,10 +29,11 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
     sync(); const ro = new ResizeObserver(sync); ro.observe(el); return () => ro.disconnect();
   }, []);
   const theme = useTheme();
+  const inStock = useMemo(() => new Set(catalog.items.filter(p => p.avail).map(p => p.id)), [catalog]);
   // bike parts first by size; apparel, gear, tools and shop merch trail behind
   const TRAILING = ['bric-a-brac', 'tools-gear', 'tools', 't-shirts'];
   const cats = catalog.collections.filter(c => !FRAME_DUPES.has(c.handle) && catalog.membership[c.handle]?.length)
-    .map(c => ({ handle: c.handle, title: c.title, n: catalog.membership[c.handle].length }))
+    .map(c => ({ handle: c.handle, title: c.title, n: catalog.membership[c.handle].filter(id => inStock.has(id)).length }))
     .sort((a, b) => (TRAILING.indexOf(a.handle) + 1 || 0) - (TRAILING.indexOf(b.handle) + 1 || 0) || b.n - a.n);
   const specSorts = (config?.sorts ?? []).flatMap(s => [[`${s.key}_asc`, `${s.label} ↑`], [`${s.key}_desc`, `${s.label} ↓`]]);
   const nFacets = Object.keys(state.facets).length;
@@ -64,9 +65,6 @@ export function TopBar({ catalog, config, defs, state, resultCount, catCount, fa
             {specSorts.length > 0 && <SelectGroup><SelectLabel>by spec</SelectLabel>{specSorts.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectGroup>}
           </SelectContent>
         </Select>
-        <ToggleGroup type="single" variant="outline" size="sm" value={state.favs ? '' : state.avail} disabled={state.favs} onValueChange={v => v && update({ avail: v as UIState['avail'] })}>
-          <ToggleGroupItem value="all">all</ToggleGroupItem><ToggleGroupItem value="in">in stock</ToggleGroupItem><ToggleGroupItem value="sold">sold out</ToggleGroupItem>
-        </ToggleGroup>
         <Button size="sm" variant={state.favs ? 'default' : 'outline'} className={cn('h-9', state.favs && 'bg-amber-500 hover:bg-amber-500/90 border-amber-500 text-white')} title="show favourites from every category" onClick={() => update({ favs: !state.favs, open: null })}>
           <Star className={cn('size-4', state.favs && 'fill-current')} /><span className="hidden sm:inline">favs</span>{favCount ? ` (${favCount})` : ''}
         </Button>

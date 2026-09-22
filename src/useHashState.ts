@@ -27,7 +27,6 @@ function read(): UIState {
     const v = q.get('view'); if (v === 'table' || v === 'showcase' || v === 'large') s.view = v === 'large' ? 'showcase' : v;
     if (q.has('sort')) s.sort = q.get('sort')!;
     if (q.has('q')) s.q = q.get('q')!;
-    const a = q.get('avail'); if (a === 'all' || a === 'sold') s.avail = a;
     if (q.has('f')) { try { s.facets = JSON.parse(q.get('f')!); } catch { /* ignore bad facets */ } }
     if (q.has('p')) s.open = q.get('p');
     if (q.get('favs') === '1') s.favs = true;
@@ -41,7 +40,6 @@ function serialize(s: UIState): string {
   if (s.view !== 'grid') q.set('view', s.view);
   if (s.sort !== 'created_desc') q.set('sort', s.sort);
   if (s.q) q.set('q', s.q);
-  if (s.avail !== 'in') q.set('avail', s.avail);
   if (Object.keys(s.facets).length) q.set('f', JSON.stringify(s.facets));
   if (s.open) q.set('p', s.open);
   if (s.favs) q.set('favs', '1');

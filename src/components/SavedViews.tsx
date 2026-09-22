@@ -18,12 +18,12 @@ function storeActive(n: string | null) { try { n ? localStorage.setItem(ACTIVE_K
 
 /** What a view captures: everything except the open product. */
 const capture = (s: UIState): UIState => ({ ...s, open: null });
-const sig = (s: UIState) => JSON.stringify({ cat: s.cat, view: s.view, sort: s.sort, q: s.q, avail: s.avail, facets: s.facets, favs: s.favs });
+const sig = (s: UIState) => JSON.stringify({ cat: s.cat, view: s.view, sort: s.sort, q: s.q, facets: s.facets, favs: s.favs });
 
 /** Human summary of a saved state for the list: category, availability, #filters, search. */
 function summary(s: UIState) {
   const n = Object.keys(s.facets).length;
-  return [s.cat || 'all', s.favs ? 'favourites' : s.avail === 'in' ? 'in stock' : s.avail === 'sold' ? 'sold out' : 'all stock', n ? `${n} filter${n > 1 ? 's' : ''}` : null, s.q ? `"${s.q}"` : null, s.view !== 'grid' ? s.view : null].filter(Boolean).join(' · ');
+  return [s.favs ? 'favourites' : s.cat || 'all', n ? `${n} filter${n > 1 ? 's' : ''}` : null, s.q ? `"${s.q}"` : null, s.view !== 'grid' ? s.view : null].filter(Boolean).join(' · ');
 }
 
 export function SavedViews({ state, apply }: { state: UIState; apply: (s: UIState) => void }) {

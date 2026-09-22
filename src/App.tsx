@@ -24,12 +24,13 @@ export default function App() {
   // favourites mode spans every category, so category facets do not apply there
   const config = useMemo(() => (state.favs ? null : configFor(state.cat)), [state.cat, state.favs]);
   const defs = useMemo(() => defsOf(config?.facets ?? []), [config]);
-  const catItems = useMemo(() => (catalog ? catalog.items.filter(p => !state.cat || p.colls.includes(state.cat)) : []), [catalog, state.cat]);
+  const catItems = useMemo(() => (catalog ? catalog.items.filter(p => p.avail && (!state.cat || p.colls.includes(state.cat))) : []), [catalog, state.cat]);
   // only depend on the favourites set while the favs filter is on; otherwise starring a card would rebuild the
   // result list and reset the grid's paging (which is what made the page jump)
   const onlyIds = state.favs ? favs : null;
-  const query = useMemo(() => ({ cat: state.favs ? '' : state.cat, q: state.q, avail: state.favs ? 'all' as const : state.avail, facets: state.favs ? {} : state.facets, onlyIds }),
-    [state.cat, state.q, state.avail, state.facets, state.favs, onlyIds]);
+  // sold-out listings are never shown, except among favourites (so you can see what you missed)
+  const query = useMemo(() => ({ cat: state.favs ? '' : state.cat, q: state.q, avail: state.favs ? 'all' as const : 'in' as const, facets: state.favs ? {} : state.facets, onlyIds }),
+    [state.cat, state.q, state.facets, state.favs, onlyIds]);
   const result = useMemo(() => {
     if (!catalog) return [];
     const cmp = SORTS[state.sort]?.cmp ?? specSort(state.sort) ?? SORTS.created_desc.cmp;
