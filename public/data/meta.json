@@ -1,19 +1,28 @@
 {
- "generated_at": "2026-09-23T05:31:19+00:00",
+ "generated_at": "2026-09-23T08:32:24+03:00",
  "products": 3588,
  "live": 3586,
  "in_stock": 3150,
  "frames_with_specs": 954,
  "parts_with_specs": 2633,
- "jev_pending": 1,
+ "jev_pending": 0,
  "last_refresh": {
-  "new": 1,
+  "new": [
+   10650334232875
+  ],
   "timestamp_touched": 3585,
-  "content_changed": 0,
-  "sold": 4,
-  "restocked": 0,
-  "price_changed": 0,
-  "gone": 1,
+  "content_changed": [],
+  "sold": [
+   10637450641707,
+   10623322947883,
+   10551059415339,
+   10410988765483
+  ],
+  "restocked": [],
+  "price_changed": [],
+  "gone": [
+   3293212869
+  ],
   "total": 3588,
   "live": 3586,
   "specs_invalidated": 0,
