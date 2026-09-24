@@ -15,7 +15,7 @@
   "handle": "bric-a-brac",
   "description": null,
   "published_at": "2013-05-25T12:40:56+09:00",
-  "updated_at": "2026-09-22T20:00:43+09:00",
+  "updated_at": "2026-09-23T20:00:48+09:00",
   "image": null,
   "products_count": 585
  },
@@ -45,7 +45,7 @@
   "handle": "clips-and-straps",
   "description": "",
   "published_at": "2013-05-25T07:01:50+09:00",
-  "updated_at": "2026-09-17T13:49:45+09:00",
+  "updated_at": "2026-09-23T20:00:48+09:00",
   "image": null,
   "products_count": 46
  },
@@ -55,7 +55,7 @@
   "handle": "cogs",
   "description": null,
   "published_at": "2013-05-10T11:30:34+09:00",
-  "updated_at": "2026-09-17T23:18:06+09:00",
+  "updated_at": "2026-09-24T20:00:23+09:00",
   "image": null,
   "products_count": 143
  },
@@ -85,9 +85,9 @@
   "handle": "frames",
   "description": "",
   "published_at": "2013-04-09T03:53:33+09:00",
-  "updated_at": "2026-09-23T11:58:16+09:00",
+  "updated_at": "2026-09-24T20:00:23+09:00",
   "image": null,
-  "products_count": 1024
+  "products_count": 1026
  },
  {
   "id": 9743449,
@@ -95,9 +95,9 @@
   "handle": "frames-by-price",
   "description": "",
   "published_at": "2013-04-14T23:56:46+09:00",
-  "updated_at": "2026-09-23T11:58:16+09:00",
+  "updated_at": "2026-09-24T20:00:23+09:00",
   "image": null,
-  "products_count": 1024
+  "products_count": 1026
  },
  {
   "id": 9769509,
@@ -105,9 +105,9 @@
   "handle": "frames-by-date",
   "description": "",
   "published_at": "2013-04-17T09:42:59+09:00",
-  "updated_at": "2026-09-23T11:58:16+09:00",
+  "updated_at": "2026-09-24T20:00:23+09:00",
   "image": null,
-  "products_count": 1024
+  "products_count": 1026
  },
  {
   "id": 9790161,
@@ -115,9 +115,9 @@
   "handle": "frame-listings",
   "description": "",
   "published_at": "2013-04-19T11:02:06+09:00",
-  "updated_at": "2026-09-23T11:58:16+09:00",
+  "updated_at": "2026-09-24T20:00:23+09:00",
   "image": null,
-  "products_count": 1024
+  "products_count": 1026
  },
  {
   "id": 9574825,
