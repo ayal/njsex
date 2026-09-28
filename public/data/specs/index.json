@@ -9,11 +9,11 @@
  },
  "stems": {
   "file": "specs/stems.jsonl",
-  "count": 212
+  "count": 215
  },
  "cogs": {
   "file": "specs/cogs.jsonl",
-  "count": 140
+  "count": 144
  },
  "handlebars": {
   "file": "specs/handlebars.jsonl",
@@ -25,7 +25,7 @@
  },
  "pedals": {
   "file": "specs/pedals.jsonl",
-  "count": 132
+  "count": 136
  },
  "saddles": {
   "file": "specs/saddles.jsonl",
@@ -45,15 +45,15 @@
  },
  "cranks": {
   "file": "specs/cranks.jsonl",
-  "count": 76
+  "count": 80
  },
  "clips-and-straps": {
   "file": "specs/clips-and-straps.jsonl",
-  "count": 44
+  "count": 50
  },
  "bottom-brackets": {
   "file": "specs/bottom-brackets.jsonl",
-  "count": 41
+  "count": 43
  },
  "chains": {
   "file": "specs/chains.jsonl",
@@ -81,6 +81,6 @@
  },
  "bric-a-brac": {
   "file": "specs/bric-a-brac.jsonl",
-  "count": 566
+  "count": 570
  }
 }
