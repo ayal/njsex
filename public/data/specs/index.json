@@ -1,7 +1,7 @@
 {
  "chainrings": {
   "file": "specs/chainrings.jsonl",
-  "count": 342
+  "count": 348
  },
  "hubs": {
   "file": "specs/hubs.jsonl",
@@ -53,7 +53,7 @@
  },
  "bottom-brackets": {
   "file": "specs/bottom-brackets.jsonl",
-  "count": 43
+  "count": 44
  },
  "chains": {
   "file": "specs/chains.jsonl",

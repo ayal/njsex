@@ -5,9 +5,9 @@
   "handle": "bottom-brackets",
   "description": "",
   "published_at": "2013-05-30T09:19:14+09:00",
-  "updated_at": "2026-10-01T20:00:40+09:00",
+  "updated_at": "2026-10-05T13:57:32+09:00",
   "image": null,
-  "products_count": 46
+  "products_count": 47
  },
  {
   "id": 10188245,
@@ -25,9 +25,9 @@
   "handle": "chainrings",
   "description": null,
   "published_at": "2013-04-14T02:53:43+09:00",
-  "updated_at": "2026-09-30T20:00:30+09:00",
+  "updated_at": "2026-10-05T13:57:31+09:00",
   "image": null,
-  "products_count": 344
+  "products_count": 350
  },
  {
   "id": 10186547,
@@ -35,7 +35,7 @@
   "handle": "chains",
   "description": "",
   "published_at": "2013-05-25T07:30:09+09:00",
-  "updated_at": "2026-10-01T20:00:40+09:00",
+  "updated_at": "2026-10-03T20:00:44+09:00",
   "image": null,
   "products_count": 37
  },
@@ -55,7 +55,7 @@
   "handle": "cogs",
   "description": null,
   "published_at": "2013-05-10T11:30:34+09:00",
-  "updated_at": "2026-10-01T20:00:40+09:00",
+  "updated_at": "2026-10-04T20:00:34+09:00",
   "image": null,
   "products_count": 147
  },
@@ -65,7 +65,7 @@
   "handle": "cranks",
   "description": "",
   "published_at": "2013-04-05T09:05:14+09:00",
-  "updated_at": "2026-10-01T20:00:40+09:00",
+  "updated_at": "2026-10-03T20:00:44+09:00",
   "image": null,
   "products_count": 84
  },
@@ -75,7 +75,7 @@
   "handle": "forks",
   "description": null,
   "published_at": "2013-05-16T09:21:38+09:00",
-  "updated_at": "2026-09-09T10:55:24+09:00",
+  "updated_at": "2026-10-03T20:00:44+09:00",
   "image": null,
   "products_count": 78
  },
@@ -85,9 +85,9 @@
   "handle": "frames",
   "description": "",
   "published_at": "2013-04-09T03:53:33+09:00",
-  "updated_at": "2026-10-03T13:48:03+09:00",
+  "updated_at": "2026-10-05T13:04:47+09:00",
   "image": null,
-  "products_count": 1035
+  "products_count": 1038
  },
  {
   "id": 9743449,
@@ -95,9 +95,9 @@
   "handle": "frames-by-price",
   "description": "",
   "published_at": "2013-04-14T23:56:46+09:00",
-  "updated_at": "2026-10-03T13:48:03+09:00",
+  "updated_at": "2026-10-05T13:04:47+09:00",
   "image": null,
-  "products_count": 1035
+  "products_count": 1038
  },
  {
   "id": 9769509,
@@ -105,9 +105,9 @@
   "handle": "frames-by-date",
   "description": "",
   "published_at": "2013-04-17T09:42:59+09:00",
-  "updated_at": "2026-10-03T13:48:03+09:00",
+  "updated_at": "2026-10-05T13:04:47+09:00",
   "image": null,
-  "products_count": 1035
+  "products_count": 1038
  },
  {
   "id": 9790161,
@@ -115,9 +115,9 @@
   "handle": "frame-listings",
   "description": "",
   "published_at": "2013-04-19T11:02:06+09:00",
-  "updated_at": "2026-10-03T13:48:03+09:00",
+  "updated_at": "2026-10-05T13:04:47+09:00",
   "image": null,
-  "products_count": 1035
+  "products_count": 1038
  },
  {
   "id": 9574825,
@@ -235,7 +235,7 @@
   "handle": "seatposts",
   "description": null,
   "published_at": "2013-05-17T04:22:23+09:00",
-  "updated_at": "2026-09-22T20:00:43+09:00",
+  "updated_at": "2026-10-03T20:00:44+09:00",
   "image": null,
   "products_count": 78
  },
@@ -245,7 +245,7 @@
   "handle": "stems",
   "description": null,
   "published_at": "2013-05-16T10:16:54+09:00",
-  "updated_at": "2026-10-01T20:00:40+09:00",
+  "updated_at": "2026-10-04T20:00:34+09:00",
   "image": null,
   "products_count": 217
  },
