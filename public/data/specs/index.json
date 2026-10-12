@@ -1,19 +1,19 @@
 {
  "chainrings": {
   "file": "specs/chainrings.jsonl",
-  "count": 348
+  "count": 354
  },
  "hubs": {
   "file": "specs/hubs.jsonl",
-  "count": 325
+  "count": 333
  },
  "stems": {
   "file": "specs/stems.jsonl",
-  "count": 215
+  "count": 222
  },
  "cogs": {
   "file": "specs/cogs.jsonl",
-  "count": 144
+  "count": 146
  },
  "handlebars": {
   "file": "specs/handlebars.jsonl",
@@ -21,15 +21,15 @@
  },
  "handlebar-stem-grip-sets": {
   "file": "specs/handlebar-stem-grip-sets.jsonl",
-  "count": 134
+  "count": 138
  },
  "pedals": {
   "file": "specs/pedals.jsonl",
-  "count": 136
+  "count": 139
  },
  "saddles": {
   "file": "specs/saddles.jsonl",
-  "count": 118
+  "count": 122
  },
  "wheelsets": {
   "file": "specs/wheelsets.jsonl",
@@ -37,15 +37,15 @@
  },
  "forks": {
   "file": "specs/forks.jsonl",
-  "count": 77
+  "count": 78
  },
  "seatposts": {
   "file": "specs/seatposts.jsonl",
-  "count": 77
+  "count": 79
  },
  "cranks": {
   "file": "specs/cranks.jsonl",
-  "count": 80
+  "count": 85
  },
  "clips-and-straps": {
   "file": "specs/clips-and-straps.jsonl",
@@ -53,7 +53,7 @@
  },
  "bottom-brackets": {
   "file": "specs/bottom-brackets.jsonl",
-  "count": 44
+  "count": 45
  },
  "chains": {
   "file": "specs/chains.jsonl",
@@ -81,6 +81,6 @@
  },
  "bric-a-brac": {
   "file": "specs/bric-a-brac.jsonl",
-  "count": 570
+  "count": 571
  }
 }
