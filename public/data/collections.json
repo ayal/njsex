@@ -15,7 +15,7 @@
   "handle": "bric-a-brac",
   "description": null,
   "published_at": "2013-05-25T12:40:56+09:00",
-  "updated_at": "2026-10-26T14:44:41+09:00",
+  "updated_at": "2026-10-26T20:00:26+09:00",
   "image": null,
   "products_count": 597
  },
@@ -25,7 +25,7 @@
   "handle": "chainrings",
   "description": null,
   "published_at": "2013-04-14T02:53:43+09:00",
-  "updated_at": "2026-10-20T20:00:27+09:00",
+  "updated_at": "2026-10-26T20:00:26+09:00",
   "image": null,
   "products_count": 355
  },
@@ -55,7 +55,7 @@
   "handle": "cogs",
   "description": null,
   "published_at": "2013-05-10T11:30:34+09:00",
-  "updated_at": "2026-10-24T20:00:38+09:00",
+  "updated_at": "2026-10-26T20:00:26+09:00",
   "image": null,
   "products_count": 145
  },
@@ -65,7 +65,7 @@
   "handle": "cranks",
   "description": "",
   "published_at": "2013-04-05T09:05:14+09:00",
-  "updated_at": "2026-10-21T14:14:01+09:00",
+  "updated_at": "2026-10-26T21:10:06+09:00",
   "image": null,
   "products_count": 92
  },
@@ -205,7 +205,7 @@
   "handle": "pedals",
   "description": null,
   "published_at": "2013-05-25T07:17:20+09:00",
-  "updated_at": "2026-10-20T20:00:27+09:00",
+  "updated_at": "2026-10-26T20:00:26+09:00",
   "image": null,
   "products_count": 133
  },
@@ -245,7 +245,7 @@
   "handle": "stems",
   "description": null,
   "published_at": "2013-05-16T10:16:54+09:00",
-  "updated_at": "2026-10-22T07:49:07+09:00",
+  "updated_at": "2026-10-26T21:09:32+09:00",
   "image": null,
   "products_count": 226
  },
