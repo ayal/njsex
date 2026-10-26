@@ -5,11 +5,11 @@
  },
  "hubs": {
   "file": "specs/hubs.jsonl",
-  "count": 333
+  "count": 335
  },
  "stems": {
   "file": "specs/stems.jsonl",
-  "count": 223
+  "count": 229
  },
  "cogs": {
   "file": "specs/cogs.jsonl",
@@ -17,7 +17,7 @@
  },
  "handlebars": {
   "file": "specs/handlebars.jsonl",
-  "count": 140
+  "count": 142
  },
  "handlebar-stem-grip-sets": {
   "file": "specs/handlebar-stem-grip-sets.jsonl",
@@ -41,11 +41,11 @@
  },
  "seatposts": {
   "file": "specs/seatposts.jsonl",
-  "count": 81
+  "count": 82
  },
  "cranks": {
   "file": "specs/cranks.jsonl",
-  "count": 88
+  "count": 91
  },
  "clips-and-straps": {
   "file": "specs/clips-and-straps.jsonl",
@@ -81,6 +81,6 @@
  },
  "bric-a-brac": {
   "file": "specs/bric-a-brac.jsonl",
-  "count": 574
+  "count": 589
  }
 }
