@@ -1,11 +1,11 @@
 {
- "generated_at": "2026-10-29T11:05:51+02:00",
+ "generated_at": "2026-10-29T12:00:51+02:00",
  "products": 3765,
  "live": 3652,
  "in_stock": 3080,
  "frames_with_specs": 987,
  "parts_with_specs": 2776,
- "jev_pending": 0,
+ "jev_pending": 178,
  "last_refresh": {
   "new": [],
   "timestamp_touched": 3652,
