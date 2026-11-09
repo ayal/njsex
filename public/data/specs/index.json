@@ -1,11 +1,11 @@
 {
  "chainrings": {
   "file": "specs/chainrings.jsonl",
-  "count": 372
+  "count": 376
  },
  "hubs": {
   "file": "specs/hubs.jsonl",
-  "count": 341
+  "count": 342
  },
  "stems": {
   "file": "specs/stems.jsonl",
@@ -13,7 +13,7 @@
  },
  "cogs": {
   "file": "specs/cogs.jsonl",
-  "count": 160
+  "count": 173
  },
  "handlebars": {
   "file": "specs/handlebars.jsonl",
@@ -21,11 +21,11 @@
  },
  "handlebar-stem-grip-sets": {
   "file": "specs/handlebar-stem-grip-sets.jsonl",
-  "count": 142
+  "count": 151
  },
  "pedals": {
   "file": "specs/pedals.jsonl",
-  "count": 139
+  "count": 143
  },
  "saddles": {
   "file": "specs/saddles.jsonl",
@@ -41,7 +41,7 @@
  },
  "seatposts": {
   "file": "specs/seatposts.jsonl",
-  "count": 88
+  "count": 93
  },
  "cranks": {
   "file": "specs/cranks.jsonl",
