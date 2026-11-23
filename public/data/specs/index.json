@@ -29,23 +29,23 @@
  },
  "saddles": {
   "file": "specs/saddles.jsonl",
-  "count": 134
+  "count": 138
  },
  "wheelsets": {
   "file": "specs/wheelsets.jsonl",
-  "count": 104
+  "count": 106
  },
  "forks": {
   "file": "specs/forks.jsonl",
-  "count": 83
+  "count": 85
  },
  "seatposts": {
   "file": "specs/seatposts.jsonl",
-  "count": 96
+  "count": 99
  },
  "cranks": {
   "file": "specs/cranks.jsonl",
-  "count": 99
+  "count": 100
  },
  "clips-and-straps": {
   "file": "specs/clips-and-straps.jsonl",
@@ -53,11 +53,11 @@
  },
  "bottom-brackets": {
   "file": "specs/bottom-brackets.jsonl",
-  "count": 58
+  "count": 59
  },
  "chains": {
   "file": "specs/chains.jsonl",
-  "count": 37
+  "count": 55
  },
  "tools": {
   "file": "specs/tools.jsonl",
@@ -69,7 +69,7 @@
  },
  "headsets": {
   "file": "specs/headsets.jsonl",
-  "count": 12
+  "count": 15
  },
  "grips": {
   "file": "specs/grips.jsonl",
